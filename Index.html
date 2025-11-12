@@ -1,0 +1,322 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <!-- Character encoding for proper text display -->
+    <meta charset="UTF-8">
+    
+    <!-- Makes the website responsive on mobile devices -->
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    
+    <!-- Title that appears in browser tab -->
+    <title>InternLink - Student Portal</title>
+    
+    <!-- Link to external CSS file -->
+    <link rel="stylesheet" href="style.css">
+</head>
+<body>
+    <!-- LOGIN SECTION - Shows first when user is not logged in -->
+    <div id="login-container" class="auth-container">
+        <div class="auth-box">
+            <div class="auth-header">
+                <h1>InternLink</h1>
+                <p>Your springboard to professional excellence</p>
+            </div>
+            
+            <!-- Login Form -->
+            <form id="login-form" onsubmit="loginUser(event)">
+                <h2>Welcome Back</h2>
+                <p class="auth-subtitle">Sign in to continue your journey</p>
+                
+                <div class="form-group">
+                    <label for="login-email">Email Address</label>
+                    <input type="email" id="login-email" required placeholder="Enter your email">
+                </div>
+                
+                <div class="form-group">
+                    <label for="login-password">Password</label>
+                    <input type="password" id="login-password" required placeholder="Enter your password">
+                </div>
+                
+                <!-- Display error messages here -->
+                <div id="login-error" class="error-message hidden"></div>
+                
+                <button type="submit" class="btn-primary">Sign In</button>
+                
+                <p class="auth-toggle">
+                    Don't have an account? 
+                    <a href="#" onclick="showAuthForm('signup')">Sign Up</a>
+                </p>
+            </form>
+            
+            <!-- Signup Form - Initially Hidden -->
+            <form id="signup-form" class="hidden" onsubmit="signupUser(event)">
+                <h2>Create Account</h2>
+                <p class="auth-subtitle">Join InternLink today</p>
+                
+                <div class="form-row">
+                    <div class="form-group">
+                        <label for="signup-firstname">First Name</label>
+                        <input type="text" id="signup-firstname" required placeholder="First name">
+                    </div>
+                    <div class="form-group">
+                        <label for="signup-lastname">Last Name</label>
+                        <input type="text" id="signup-lastname" required placeholder="Last name">
+                    </div>
+                </div>
+                
+                <div class="form-group">
+                    <label for="signup-email">Email Address</label>
+                    <input type="email" id="signup-email" required placeholder="Enter your email">
+                </div>
+                
+                <div class="form-group">
+                    <label for="signup-password">Password</label>
+                    <input type="password" id="signup-password" required 
+                           placeholder="Minimum 8 characters" minlength="8">
+                </div>
+                
+                <div class="form-group">
+                    <label for="signup-confirm-password">Confirm Password</label>
+                    <input type="password" id="signup-confirm-password" required 
+                           placeholder="Re-enter password">
+                </div>
+                
+                <!-- Display error messages here -->
+                <div id="signup-error" class="error-message hidden"></div>
+                
+                <button type="submit" class="btn-primary">Create Account</button>
+                
+                <p class="auth-toggle">
+                    Already have an account? 
+                    <a href="#" onclick="showAuthForm('login')">Sign In</a>
+                </p>
+            </form>
+        </div>
+    </div>
+
+    <!-- MAIN APPLICATION - Shows after successful login -->
+    <div id="app-container" class="hidden">
+        <!-- Navigation Bar - Links to different sections -->
+        <nav>
+            <!-- Display logged in user's name -->
+            <div class="nav-user">
+                <span id="nav-username">Student</span>
+            </div>
+            
+            <!-- Navigation links -->
+            <a href="#" onclick="showSection('home')">🏠 Home</a>
+            <a href="#" onclick="showSection('register')">📝 Complete Profile</a>
+            <a href="#" onclick="showSection('internships')">💼 Available Internships</a>
+            <a href="#" onclick="showSection('applications')">📋 My Applications</a>
+            <a href="#" onclick="showSection('profile')">👤 Profile</a>
+            <a href="#" onclick="logout()">🚪 Log Out</a>
+        </nav>
+
+        <header>
+            <h1>InternLink</h1>
+            <p>Your springboard to professional excellence</p>
+        </header>
+
+        <!-- Main Content Area - Contains all sections -->
+        <main>
+            <!-- HOME SECTION - Landing page with welcome message -->
+            <section id="home-section">
+                <h2>Welcome to InternLink Student Portal</h2>
+                
+                <!-- Welcome message box -->
+                <div class="welcome-message">
+                    <h3>Start Your Career Journey Today!</h3>
+                    <p id="welcome-user-name">Complete your profile to access exclusive internship opportunities</p>
+                </div>
+                
+                <!-- Introduction text -->
+                <p style="line-height: 1.8; color: #555;">
+                    This platform connects students with valuable internship opportunities across various industries. 
+                    Whether you're looking to gain practical experience, develop new skills, or explore career paths, 
+                    we're here to help you find the perfect internship match.
+                </p>
+                
+                <!-- Call-to-action buttons -->
+                <div style="margin-top: 2rem;">
+                    <button onclick="showSection('register')">Complete Your Profile</button>
+                    <button onclick="showSection('internships')" style="margin-left: 1rem;" class="btn-secondary">Browse Internships</button>
+                </div>
+            </section>
+
+            <!-- REGISTRATION SECTION - Student profile completion form -->
+            <section id="register-section" class="hidden">
+                <h2>Complete Your Profile</h2>
+                
+                <!-- Form with onsubmit to prevent default behavior and call registration function -->
+                <form id="registration-form" class="registration-form active" onsubmit="registerStudent(event)">
+                    
+                    <!-- Row 1: First Name and Last Name (Pre-filled from signup) -->
+                    <div class="form-row">
+                        <div class="form-group">
+                            <label for="firstName">First Name *</label>
+                            <input type="text" id="firstName" required readonly>
+                        </div>
+                        <div class="form-group">
+                            <label for="lastName">Last Name *</label>
+                            <input type="text" id="lastName" required readonly>
+                        </div>
+                    </div>
+
+                    <!-- Row 2: Email and Phone -->
+                    <div class="form-row">
+                        <div class="form-group">
+                            <label for="email">Email Address *</label>
+                            <input type="email" id="email" required readonly>
+                        </div>
+                        <div class="form-group">
+                            <label for="phone">Phone Number *</label>
+                            <input type="tel" id="phone" required>
+                        </div>
+                    </div>
+
+                    <!-- Row 3: University and Course -->
+                    <div class="form-row">
+                        <div class="form-group">
+                            <label for="university">University/College *</label>
+                            <input type="text" id="university" required>
+                        </div>
+                        <div class="form-group">
+                            <label for="course">Course/Program *</label>
+                            <input type="text" id="course" required>
+                        </div>
+                    </div>
+
+                    <!-- Row 4: Year of Study and GPA -->
+                    <div class="form-row">
+                        <div class="form-group">
+                            <label for="year">Year of Study *</label>
+                            <select id="year" required>
+                                <option value="">Select Year</option>
+                                <option value="1">First Year</option>
+                                <option value="2">Second Year</option>
+                                <option value="3">Third Year</option>
+                                <option value="4">Fourth Year</option>
+                            </select>
+                        </div>
+                        <div class="form-group">
+                            <label for="gpa">GPA/Grade *</label>
+                            <input type="text" id="gpa" required>
+                        </div>
+                    </div>
+
+                    <!-- Skills input field -->
+                    <div class="form-group">
+                        <label for="skills">Skills (comma separated)</label>
+                        <input type="text" id="skills" placeholder="e.g., Python, Data Analysis, Communication">
+                    </div>
+
+                    <!-- Interests textarea -->
+                    <div class="form-group">
+                        <label for="interests">Areas of Interest</label>
+                        <textarea id="interests" rows="3" placeholder="Describe your career interests and goals"></textarea>
+                    </div>
+
+                    <!-- Submit button -->
+                    <button type="submit">Save Profile</button>
+                </form>
+            </section>
+
+            <!-- INTERNSHIPS SECTION - Display available internships -->
+            <section id="internships-section" class="hidden">
+                <h2>Available Internships</h2>
+                
+                <!-- Grid container for internship cards -->
+                <div class="internships-grid">
+                    
+                    <!-- Internship Card 1 -->
+                    <div class="card">
+                        <h3>Software Developer Intern</h3>
+                        <p class="company"><b>Company:</b> TechNova Solutions</p>
+                        <p class="location"><b>Location:</b> Nairobi</p>
+                        <p><b>Duration:</b> 3 months</p>
+                        <p><b>Requirements:</b> Programming skills, Team player</p>
+                        <button onclick="applyInternship('Software Developer', 'TechNova Solutions')">Apply Now</button>
+                    </div>
+
+                    <!-- Internship Card 2 -->
+                    <div class="card">
+                        <h3>Data Analyst Intern</h3>
+                        <p class="company"><b>Company:</b> DataBridge</p>
+                        <p class="location"><b>Location:</b> Mombasa</p>
+                        <p><b>Duration:</b> 4 months</p>
+                        <p><b>Requirements:</b> Excel, SQL, Analytical thinking</p>
+                        <button onclick="applyInternship('Data Analyst', 'DataBridge')">Apply Now</button>
+                    </div>
+
+                    <!-- Internship Card 3 -->
+                    <div class="card">
+                        <h3>Marketing Intern</h3>
+                        <p class="company"><b>Company:</b> BrandWave Agency</p>
+                        <p class="location"><b>Location:</b> Nairobi</p>
+                        <p><b>Duration:</b> 3 months</p>
+                        <p><b>Requirements:</b> Social Media, Content Creation</p>
+                        <button onclick="applyInternship('Marketing', 'BrandWave Agency')">Apply Now</button>
+                    </div>
+
+                    <!-- Internship Card 4 -->
+                    <div class="card">
+                        <h3>Finance Intern</h3>
+                        <p class="company"><b>Company:</b> Capital Advisors</p>
+                        <p class="location"><b>Location:</b> Kisumu</p>
+                        <p><b>Duration:</b> 6 months</p>
+                        <p><b>Requirements:</b> Accounting, Financial Analysis</p>
+                        <button onclick="applyInternship('Finance', 'Capital Advisors')">Apply Now</button>
+                    </div>
+                </div>
+            </section>
+
+            <!-- APPLICATIONS SECTION - Shows student's application history -->
+            <section id="applications-section" class="hidden">
+                <h2>My Applications</h2>
+                
+                <!-- Table to display applications -->
+                <table class="applications-table">
+                    <thead>
+                        <tr>
+                            <th>Position</th>
+                            <th>Company</th>
+                            <th>Date Applied</th>
+                            <th>Status</th>
+                        </tr>
+                    </thead>
+                    <tbody id="applications-tbody">
+                        <tr>
+                            <td colspan="4" style="text-align: center; padding: 2rem; color: #999;">
+                                No applications yet. Start applying to internships!
+                            </td>
+                        </tr>
+                    </tbody>
+                </table>
+            </section>
+
+            <!-- PROFILE SECTION - Displays student profile information -->
+            <section id="profile-section" class="hidden">
+                <h2>My Profile</h2>
+                
+                <!-- Profile information container -->
+                <div class="profile-info" id="profile-display">
+                    <p style="text-align: center; color: #999; padding: 2rem;">
+                        Please complete your profile to view information.
+                    </p>
+                </div>
+                
+                <!-- Button to edit profile -->
+                <button onclick="showSection('register')" style="margin-top: 1rem;">Edit Profile</button>
+            </section>
+        </main>
+
+        <!-- Footer Section -->
+        <footer>
+            <p>&copy; 2025 InternLink | Developed by Natasha Oyugi</p>
+        </footer>
+    </div>
+
+    <!-- Link to external JavaScript file for functionality -->
+    <script src="script.js"></script>
+</body>
+</html>

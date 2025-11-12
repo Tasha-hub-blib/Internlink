@@ -1,0 +1,455 @@
+/* ==================== GLOBAL STYLES ==================== */
+/* Reset default browser styles and set base font */
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+}
+
+body {
+    font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+    line-height: 1.6;
+    color: #333;
+    background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+    min-height: 100vh;
+}
+
+/* ==================== AUTHENTICATION STYLES ==================== */
+/* Container for login/signup forms - full screen centered */
+.auth-container {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    min-height: 100vh;
+    padding: 2rem;
+}
+
+/* White box containing the auth forms */
+.auth-box {
+    background: white;
+    border-radius: 20px;
+    box-shadow: 0 20px 60px rgba(0, 0, 0, 0.3);
+    padding: 3rem;
+    max-width: 500px;
+    width: 100%;
+    animation: slideUp 0.5s ease-out;
+}
+
+/* Slide up animation for auth box */
+@keyframes slideUp {
+    from {
+        opacity: 0;
+        transform: translateY(30px);
+    }
+    to {
+        opacity: 1;
+        transform: translateY(0);
+    }
+}
+
+/* Header section in auth box */
+.auth-header {
+    text-align: center;
+    margin-bottom: 2rem;
+}
+
+.auth-header h1 {
+    color: #667eea;
+    font-size: 2.5rem;
+    margin-bottom: 0.5rem;
+}
+
+.auth-header p {
+    color: #666;
+    font-size: 1rem;
+}
+
+/* Auth form titles */
+#login-form h2,
+#signup-form h2 {
+    color: #333;
+    margin-bottom: 0.5rem;
+    font-size: 1.8rem;
+}
+
+/* Subtitle under form title */
+.auth-subtitle {
+    color: #666;
+    margin-bottom: 2rem;
+    font-size: 0.95rem;
+}
+
+/* Toggle between login and signup */
+.auth-toggle {
+    text-align: center;
+    margin-top: 1.5rem;
+    color: #666;
+}
+
+.auth-toggle a {
+    color: #667eea;
+    text-decoration: none;
+    font-weight: 600;
+}
+
+.auth-toggle a:hover {
+    text-decoration: underline;
+}
+
+/* Error message styling */
+.error-message {
+    background: #fee;
+    color: #c33;
+    padding: 0.75rem;
+    border-radius: 8px;
+    margin-bottom: 1rem;
+    font-size: 0.9rem;
+    border: 1px solid #fcc;
+}
+
+/* ==================== NAVIGATION BAR ==================== */
+nav {
+    background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+    padding: 1rem 2rem;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    box-shadow: 0 2px 10px rgba(0,0,0,0.1);
+    flex-wrap: wrap;
+}
+
+/* User display in navigation */
+.nav-user {
+    color: white;
+    font-weight: 600;
+    background: rgba(255, 255, 255, 0.2);
+    padding: 0.5rem 1rem;
+    border-radius: 20px;
+    margin-right: 1rem;
+}
+
+/* Navigation links */
+nav a {
+    color: white;
+    text-decoration: none;
+    padding: 0.5rem 1rem;
+    border-radius: 5px;
+    transition: background 0.3s;
+    margin: 0.25rem;
+}
+
+nav a:hover {
+    background: rgba(255, 255, 255, 0.2);
+}
+
+/* ==================== HEADER ==================== */
+header {
+    background: white;
+    text-align: center;
+    padding: 2rem;
+    box-shadow: 0 2px 5px rgba(0,0,0,0.1);
+}
+
+header h1 {
+    color: #667eea;
+    font-size: 2.5rem;
+    margin-bottom: 0.5rem;
+}
+
+header p {
+    color: #666;
+    font-size: 1.1rem;
+}
+
+/* ==================== MAIN CONTENT ==================== */
+main {
+    max-width: 1200px;
+    margin: 2rem auto;
+    padding: 0 2rem;
+}
+
+/* Section styling */
+section {
+    background: white;
+    padding: 2rem;
+    border-radius: 10px;
+    box-shadow: 0 2px 10px rgba(0,0,0,0.1);
+    margin-bottom: 2rem;
+}
+
+section h2 {
+    color: #667eea;
+    margin-bottom: 1.5rem;
+    font-size: 2rem;
+    border-bottom: 3px solid #667eea;
+    padding-bottom: 0.5rem;
+}
+
+/* ==================== WELCOME MESSAGE ==================== */
+.welcome-message {
+    background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+    color: white;
+    padding: 2rem;
+    border-radius: 10px;
+    text-align: center;
+    margin-bottom: 2rem;
+}
+
+.welcome-message h3 {
+    font-size: 1.8rem;
+    margin-bottom: 0.5rem;
+}
+
+/* ==================== FORMS ==================== */
+/* Form row for side-by-side inputs */
+.form-row {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 1rem;
+    margin-bottom: 1rem;
+}
+
+/* Individual form field */
+.form-group {
+    margin-bottom: 1rem;
+}
+
+.form-group label {
+    display: block;
+    margin-bottom: 0.5rem;
+    color: #333;
+    font-weight: 600;
+}
+
+/* Input field styling */
+.form-group input,
+.form-group select,
+.form-group textarea {
+    width: 100%;
+    padding: 0.75rem;
+    border: 2px solid #ddd;
+    border-radius: 8px;
+    font-size: 1rem;
+    transition: border-color 0.3s;
+}
+
+.form-group input:focus,
+.form-group select:focus,
+.form-group textarea:focus {
+    outline: none;
+    border-color: #667eea;
+}
+
+/* Read-only fields (for pre-filled data) */
+.form-group input[readonly] {
+    background: #f5f5f5;
+    cursor: not-allowed;
+}
+
+/* ==================== BUTTONS ==================== */
+button, .btn-primary {
+    background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+    color: white;
+    padding: 0.75rem 2rem;
+    border: none;
+    border-radius: 8px;
+    font-size: 1rem;
+    font-weight: 600;
+    cursor: pointer;
+    transition: transform 0.2s, box-shadow 0.2s;
+}
+
+button:hover, .btn-primary:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 5px 15px rgba(102, 126, 234, 0.4);
+}
+
+/* Secondary button style */
+.btn-secondary {
+    background: #6c757d;
+}
+
+.btn-secondary:hover {
+    box-shadow: 0 5px 15px rgba(108, 117, 125, 0.4);
+}
+
+/* ==================== INTERNSHIP CARDS ==================== */
+/* Grid layout for internship cards */
+.internships-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
+    gap: 2rem;
+    margin-top: 2rem;
+}
+
+/* Individual internship card */
+.card {
+    background: white;
+    border: 2px solid #e0e0e0;
+    border-radius: 10px;
+    padding: 1.5rem;
+    transition: transform 0.3s, box-shadow 0.3s;
+}
+
+.card:hover {
+    transform: translateY(-5px);
+    box-shadow: 0 10px 25px rgba(0,0,0,0.15);
+    border-color: #667eea;
+}
+
+.card h3 {
+    color: #667eea;
+    margin-bottom: 1rem;
+    font-size: 1.4rem;
+}
+
+.card p {
+    margin-bottom: 0.5rem;
+    color: #555;
+}
+
+.card .company {
+    color: #764ba2;
+    font-weight: 600;
+}
+
+.card .location {
+    color: #666;
+}
+
+.card button {
+    width: 100%;
+    margin-top: 1rem;
+}
+
+/* ==================== APPLICATIONS TABLE ==================== */
+.applications-table {
+    width: 100%;
+    border-collapse: collapse;
+    margin-top: 1rem;
+}
+
+.applications-table th,
+.applications-table td {
+    padding: 1rem;
+    text-align: left;
+    border-bottom: 1px solid #ddd;
+}
+
+.applications-table th {
+    background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+    color: white;
+    font-weight: 600;
+}
+
+.applications-table tr:hover {
+    background: #f8f9fa;
+}
+
+/* Status badges */
+.status-pending {
+    background: #ffc107;
+    color: #000;
+    padding: 0.25rem 0.75rem;
+    border-radius: 20px;
+    font-size: 0.85rem;
+    font-weight: 600;
+}
+
+.status-approved {
+    background: #28a745;
+    color: white;
+    padding: 0.25rem 0.75rem;
+    border-radius: 20px;
+    font-size: 0.85rem;
+    font-weight: 600;
+}
+
+.status-rejected {
+    background: #dc3545;
+    color: white;
+    padding: 0.25rem 0.75rem;
+    border-radius: 20px;
+    font-size: 0.85rem;
+    font-weight: 600;
+}
+
+/* ==================== PROFILE SECTION ==================== */
+.profile-info {
+    background: #f8f9fa;
+    padding: 2rem;
+    border-radius: 10px;
+    border: 2px solid #e0e0e0;
+}
+
+.profile-info h3 {
+    color: #667eea;
+    margin-bottom: 1rem;
+    font-size: 1.5rem;
+}
+
+.profile-info p {
+    margin-bottom: 0.75rem;
+    color: #555;
+}
+
+.profile-info strong {
+    color: #333;
+    display: inline-block;
+    min-width: 150px;
+}
+
+/* ==================== FOOTER ==================== */
+footer {
+    background: #333;
+    color: white;
+    text-align: center;
+    padding: 1.5rem;
+    margin-top: 3rem;
+}
+
+/* ==================== UTILITY CLASSES ==================== */
+/* Hidden class to hide elements */
+.hidden {
+    display: none !important;
+}
+
+/* ==================== RESPONSIVE DESIGN ==================== */
+/* Tablet and smaller screens */
+@media (max-width: 768px) {
+    /* Stack form fields vertically on mobile */
+    .form-row {
+        grid-template-columns: 1fr;
+    }
+    
+    /* Reduce navigation padding */
+    nav {
+        padding: 1rem;
+        justify-content: center;
+    }
+    
+    .nav-user {
+        width: 100%;
+        text-align: center;
+        margin-bottom: 0.5rem;
+    }
+    
+    /* Reduce header font size */
+    header h1 {
+        font-size: 2rem;
+    }
+    
+    /* Stack internship cards on mobile */
+    .internships-grid {
+        grid-template-columns: 1fr;
+    }
+    
+    /* Reduce auth box padding */
+    .auth-box {
+        padding: 2rem 1.5rem;
+    }
+    
+    .auth-header h1 {
+        font-size: 2rem;
+    }
+}
