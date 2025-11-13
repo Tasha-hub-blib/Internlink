@@ -453,3 +453,31 @@ footer {
         font-size: 2rem;
     }
 }
+/* Add at the end of the file */
+
+/* Forgot Password Link */
+.forgot-password {
+    text-align: right;
+    margin: -0.5rem 0 1rem 0;
+    font-size: 0.9rem;
+}
+
+.forgot-password a {
+    color: #667eea;
+    text-decoration: none;
+}
+
+.forgot-password a:hover {
+    text-decoration: underline;
+}
+
+/* Success Message */
+.success-message {
+    background: #d4edda;
+    color: #155724;
+    padding: 0.75rem;
+    border-radius: 8px;
+    margin-bottom: 1rem;
+    font-size: 0.9rem;
+    border: 1px solid #c3e6cb;
+}

@@ -36,6 +36,9 @@
                     <label for="login-password">Password</label>
                     <input type="password" id="login-password" required placeholder="Enter your password">
                 </div>
+                <p class="forgot-password">
+    <a href="#" onclick="showForgotPassword()">Forgot Password?</a>
+</p>
                 
                 <!-- Display error messages here -->
                 <div id="login-error" class="error-message hidden"></div>
@@ -80,6 +83,42 @@
                     <input type="password" id="signup-confirm-password" required 
                            placeholder="Re-enter password">
                 </div>
+            <!-- Add this new form after signup-form -->
+<form id="forgot-password-form" class="hidden" onsubmit="resetPassword(event)">
+    <h2>Reset Password</h2>
+    <p class="auth-subtitle">Enter your email to reset your password</p>
+    
+    <div class="form-group">
+        <label for="reset-email">Email Address</label>
+        <input type="email" id="reset-email" required placeholder="Enter your email">
+    </div>
+    
+    <div class="form-group hidden" id="reset-code-group">
+        <label for="reset-code">Reset Code</label>
+        <input type="text" id="reset-code" placeholder="Enter code sent to email">
+    </div>
+    
+    <div class="form-group hidden" id="new-password-group">
+        <label for="new-password">New Password</label>
+        <input type="password" id="new-password" placeholder="Minimum 8 characters" minlength="8">
+    </div>
+    
+    <div class="form-group hidden" id="confirm-new-password-group">
+        <label for="confirm-new-password">Confirm New Password</label>
+        <input type="password" id="confirm-new-password" placeholder="Re-enter password">
+    </div>
+    
+    <div id="forgot-error" class="error-message hidden"></div>
+    <div id="forgot-success" class="success-message hidden"></div>
+    
+    <button type="submit" class="btn-primary">Reset Password</button>
+    
+    <p class="auth-toggle">
+        Remember your password? 
+        <a href="#" onclick="showAuthForm('login')">Back to Login</a>
+    </p>
+</form>
+
                 
                 <!-- Display error messages here -->
                 <div id="signup-error" class="error-message hidden"></div>
