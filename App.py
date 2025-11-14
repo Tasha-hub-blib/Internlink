@@ -4,6 +4,62 @@ from flask_cors import CORS
 from werkzeug.security import generate_password_hash, check_password_hash
 import sqlite3
 from datetime import datetime
+def init_db():
+    """Initialize database tables if they don't exist"""
+    conn = get_db_connection()
+    if conn:
+        cursor = conn.cursor()
+        
+        # Create users table
+        cursor.execute("""
+            CREATE TABLE IF NOT EXISTS users (
+                id INTEGER PRIMARY KEY AUTOINCREMENT,
+                first_name TEXT NOT NULL,
+                last_name TEXT NOT NULL,
+                email TEXT UNIQUE NOT NULL,
+                password TEXT NOT NULL,
+                user_type TEXT NOT NULL,
+                created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP
+            )
+        """)
+        
+        # Create profiles table
+        cursor.execute("""
+            CREATE TABLE IF NOT EXISTS profiles (
+                id INTEGER PRIMARY KEY AUTOINCREMENT,
+                user_id INTEGER UNIQUE NOT NULL,
+                phone TEXT,
+                university TEXT,
+                course TEXT,
+                year TEXT,
+                gpa TEXT,
+                skills TEXT,
+                interests TEXT,
+                created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+                updated_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+                FOREIGN KEY (user_id) REFERENCES users (id)
+            )
+        """)
+        
+        # Create applications table
+        cursor.execute("""
+            CREATE TABLE IF NOT EXISTS applications (
+                id INTEGER PRIMARY KEY AUTOINCREMENT,
+                user_id INTEGER NOT NULL,
+                position TEXT NOT NULL,
+                company TEXT NOT NULL,
+                status TEXT DEFAULT 'Pending',
+                date_applied TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+                FOREIGN KEY (user_id) REFERENCES users (id)
+            )
+        """)
+        
+        conn.commit()
+        conn.close()
+        print("✓ Database initialized")
+
+# Initialize database when app starts
+init_db()
 
 # ==================== APP INITIALIZATION ====================
 app = Flask(__name__)
