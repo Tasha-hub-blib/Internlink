@@ -40,23 +40,88 @@ function checkLoginStatus() {
 }
 
 /**
- * Show/hide different auth forms (login or signup)
+ * Show/hide different auth forms (login, signup, or forgot password)
  */
 function showAuthForm(formType) {
     const loginForm = document.getElementById('login-form');
     const signupForm = document.getElementById('signup-form');
+    const forgotForm = document.getElementById('forgot-password-form');
     
+    // Hide all forms
+    loginForm.classList.add('hidden');
+    signupForm.classList.add('hidden');
+    if (forgotForm) forgotForm.classList.add('hidden');
+    
+    // Show requested form
     if (formType === 'login') {
         loginForm.classList.remove('hidden');
-        signupForm.classList.add('hidden');
-    } else {
-        loginForm.classList.add('hidden');
+    } else if (formType === 'signup') {
         signupForm.classList.remove('hidden');
+    } else if (formType === 'forgot') {
+        forgotForm.classList.remove('hidden');
     }
     
     // Clear any error messages
     document.getElementById('login-error').classList.add('hidden');
     document.getElementById('signup-error').classList.add('hidden');
+    if (document.getElementById('forgot-error')) {
+        document.getElementById('forgot-error').classList.add('hidden');
+    }
+    if (document.getElementById('forgot-success')) {
+        document.getElementById('forgot-success').classList.add('hidden');
+    }
+}
+
+/**
+ * Show forgot password form
+ */
+function showForgotPassword() {
+    showAuthForm('forgot');
+    return false;
+}
+
+/**
+ * Handle password reset
+ */
+async function resetPassword(event) {
+    event.preventDefault();
+    
+    const email = document.getElementById('reset-email').value;
+    const errorDiv = document.getElementById('forgot-error');
+    const successDiv = document.getElementById('forgot-success');
+    
+    try {
+        const response = await fetch(`${API_URL}/api/forgot-password`, {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/json',
+            },
+            body: JSON.stringify({ email })
+        });
+        
+        const data = await response.json();
+        
+        if (response.ok) {
+            successDiv.textContent = data.message || 'Password reset instructions sent to your email!';
+            successDiv.classList.remove('hidden');
+            errorDiv.classList.add('hidden');
+            
+            // Show message and redirect to login after 3 seconds
+            setTimeout(() => {
+                showAuthForm('login');
+            }, 3000);
+        } else {
+            errorDiv.textContent = data.message || 'Failed to send reset email. Please try again.';
+            errorDiv.classList.remove('hidden');
+            successDiv.classList.add('hidden');
+        }
+        
+    } catch (error) {
+        console.error('Reset password error:', error);
+        errorDiv.textContent = 'Unable to connect to server. Please try again later.';
+        errorDiv.classList.remove('hidden');
+        successDiv.classList.add('hidden');
+    }
 }
 
 /**

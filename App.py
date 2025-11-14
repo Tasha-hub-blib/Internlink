@@ -128,6 +128,46 @@ def login():
     except Exception as e:
         print(f"Login error: {e}")
         return jsonify({'message': 'An error occurred during login'}), 500
+@app.route('/api/forgot-password', methods=['POST'])
+def forgot_password():
+    """
+    Handle forgot password request
+    For now, just validates email exists
+    In production, you'd send an actual email with reset link
+    """
+    try:
+        data = request.get_json()
+        email = data.get('email')
+        
+        if not email:
+            return jsonify({'message': 'Email is required'}), 400
+        
+        conn = get_db_connection()
+        if not conn:
+            return jsonify({'message': 'Database connection failed'}), 500
+        
+        cursor = conn.cursor()
+        cursor.execute("SELECT id FROM users WHERE email = ?", (email,))
+        user = cursor.fetchone()
+        conn.close()
+        
+        # For security, always return success even if email not found
+        # This prevents email enumeration attacks
+        if user:
+            # TODO: In production, generate reset token and send email
+            # For now, just return success
+            return jsonify({
+                'message': 'If an account exists with this email, you will receive password reset instructions.'
+            }), 200
+        else:
+            # Still return success for security
+            return jsonify({
+                'message': 'If an account exists with this email, you will receive password reset instructions.'
+            }), 200
+        
+    except Exception as e:
+        print(f"Forgot password error: {e}")
+        return jsonify({'message': 'An error occurred'}), 500
 
 # ==================== PROFILE ROUTES ====================
 
