@@ -4,6 +4,23 @@ from flask_cors import CORS
 from werkzeug.security import generate_password_hash, check_password_hash
 import sqlite3
 from datetime import datetime
+
+# ==================== DATABASE CONNECTION ====================
+DATABASE = 'internlink.db'
+
+def get_db_connection():
+    """
+    Create and return a database connection
+    """
+    try:
+        conn = sqlite3.connect(DATABASE)
+        conn.row_factory = sqlite3.Row  # Return rows as dictionaries
+        return conn
+    except Exception as e:
+        print(f"Error connecting to database: {e}")
+        return None
+
+# ==================== DATABASE INITIALIZATION ====================
 def init_db():
     """Initialize database tables if they don't exist"""
     conn = get_db_connection()
@@ -64,21 +81,6 @@ init_db()
 # ==================== APP INITIALIZATION ====================
 app = Flask(__name__)
 CORS(app)
-
-# ==================== DATABASE CONNECTION ====================
-DATABASE = 'internlink.db'
-
-def get_db_connection():
-    """
-    Create and return a database connection
-    """
-    try:
-        conn = sqlite3.connect(DATABASE)
-        conn.row_factory = sqlite3.Row  # Return rows as dictionaries
-        return conn
-    except Exception as e:
-        print(f"Error connecting to database: {e}")
-        return None
 
 # ==================== AUTHENTICATION ROUTES ====================
 
@@ -184,6 +186,7 @@ def login():
     except Exception as e:
         print(f"Login error: {e}")
         return jsonify({'message': 'An error occurred during login'}), 500
+
 @app.route('/api/forgot-password', methods=['POST'])
 def forgot_password():
     """
