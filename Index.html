@@ -36,9 +36,10 @@
                     <label for="login-password">Password</label>
                     <input type="password" id="login-password" required placeholder="Enter your password">
                 </div>
+                
                 <p class="forgot-password">
-    <a href="#" onclick="showForgotPassword()">Forgot Password?</a>
-</p>
+                    <a href="#" onclick="showForgotPassword(); return false;">Forgot Password?</a>
+                </p>
                 
                 <!-- Display error messages here -->
                 <div id="login-error" class="error-message hidden"></div>
@@ -47,7 +48,7 @@
                 
                 <p class="auth-toggle">
                     Don't have an account? 
-                    <a href="#" onclick="showAuthForm('signup')">Sign Up</a>
+                    <a href="#" onclick="showAuthForm('signup'); return false;">Sign Up</a>
                 </p>
             </form>
             
@@ -83,72 +84,72 @@
                     <input type="password" id="signup-confirm-password" required 
                            placeholder="Re-enter password">
                 </div>
-            <!-- Add this new form after signup-form -->
-<form id="forgot-password-form" class="hidden" onsubmit="resetPassword(event)">
-    <h2>Reset Password</h2>
-    <p class="auth-subtitle">Enter your email to reset your password</p>
-    
-    <div class="form-group">
-        <label for="reset-email">Email Address</label>
-        <input type="email" id="reset-email" required placeholder="Enter your email">
-    </div>
-    
-    <div class="form-group hidden" id="reset-code-group">
-        <label for="reset-code">Reset Code</label>
-        <input type="text" id="reset-code" placeholder="Enter code sent to email">
-    </div>
-    
-    <div class="form-group hidden" id="new-password-group">
-        <label for="new-password">New Password</label>
-        <input type="password" id="new-password" placeholder="Minimum 8 characters" minlength="8">
-    </div>
-    
-    <div class="form-group hidden" id="confirm-new-password-group">
-        <label for="confirm-new-password">Confirm New Password</label>
-        <input type="password" id="confirm-new-password" placeholder="Re-enter password">
-    </div>
-    
-    <div id="forgot-error" class="error-message hidden"></div>
-    <div id="forgot-success" class="success-message hidden"></div>
-    
-    <button type="submit" class="btn-primary">Reset Password</button>
-    
-    <p class="auth-toggle">
-        Remember your password? 
-        <a href="#" onclick="showAuthForm('login')">Back to Login</a>
-    </p>
-</form>
-
                 
                 <!-- Display error messages here -->
                 <div id="signup-error" class="error-message hidden"></div>
                 
-                <button type="submit" class="btn-primary">Create Account</button>
+                <button type="submit" class="btn-primary">Sign Up</button>
                 
                 <p class="auth-toggle">
                     Already have an account? 
-                    <a href="#" onclick="showAuthForm('login')">Sign In</a>
+                    <a href="#" onclick="showAuthForm('login'); return false;">Sign In</a>
+                </p>
+            </form>
+
+            <!-- Forgot Password Form -->
+            <form id="forgot-password-form" class="hidden" onsubmit="resetPassword(event)">
+                <h2>Reset Password</h2>
+                <p class="auth-subtitle">Enter your email to reset your password</p>
+                
+                <div class="form-group">
+                    <label for="reset-email">Email Address</label>
+                    <input type="email" id="reset-email" required placeholder="Enter your email">
+                </div>
+                
+                <div class="form-group hidden" id="reset-code-group">
+                    <label for="reset-code">Reset Code</label>
+                    <input type="text" id="reset-code" placeholder="Enter code from email" maxlength="6">
+                </div>
+                
+                <div class="form-group hidden" id="new-password-group">
+                    <label for="new-password">New Password</label>
+                    <input type="password" id="new-password" placeholder="Minimum 8 characters" minlength="8">
+                </div>
+                
+                <div class="form-group hidden" id="confirm-new-password-group">
+                    <label for="confirm-new-password">Confirm New Password</label>
+                    <input type="password" id="confirm-new-password" placeholder="Re-enter password">
+                </div>
+                
+                <div id="forgot-error" class="error-message hidden"></div>
+                <div id="forgot-success" class="success-message hidden"></div>
+                
+                <button type="submit" class="btn-primary" id="reset-submit-btn">Send Reset Code</button>
+                
+                <p class="auth-toggle">
+                    Remember your password? 
+                    <a href="#" onclick="showAuthForm('login'); return false;">Back to Login</a>
                 </p>
             </form>
         </div>
     </div>
 
-    <!-- MAIN APPLICATION - Shows after successful login -->
+    <!-- MAIN APPLICATION-->
     <div id="app-container" class="hidden">
-        <!-- Navigation Bar - Links to different sections -->
+        
         <nav>
-            <!-- Display logged in user's name -->
+            
             <div class="nav-user">
                 <span id="nav-username">Student</span>
             </div>
             
-            <!-- Navigation links -->
-            <a href="#" onclick="showSection('home')">🏠 Home</a>
-            <a href="#" onclick="showSection('register')">📝 Complete Profile</a>
-            <a href="#" onclick="showSection('internships')">💼 Available Internships</a>
-            <a href="#" onclick="showSection('applications')">📋 My Applications</a>
-            <a href="#" onclick="showSection('profile')">👤 Profile</a>
-            <a href="#" onclick="logout()">🚪 Log Out</a>
+            
+            <a href="#" onclick="showSection('home'); return false;">🏠 Home</a>
+            <a href="#" onclick="showSection('register'); return false;">📝 Complete Profile</a>
+            <a href="#" onclick="showSection('internships'); return false;">💼 Available Internships</a>
+            <a href="#" onclick="showSection('applications'); return false;">📋 My Applications</a>
+            <a href="#" onclick="showSection('profile'); return false;">👤 Profile</a>
+            <a href="#" onclick="logout(); return false;">🚪 Log Out</a>
         </nav>
 
         <header>
@@ -156,40 +157,40 @@
             <p>Your springboard to professional excellence</p>
         </header>
 
-        <!-- Main Content Area - Contains all sections -->
+        
         <main>
-            <!-- HOME SECTION - Landing page with welcome message -->
+            <!-- HOME PAGE-->
             <section id="home-section">
                 <h2>Welcome to InternLink Student Portal</h2>
                 
-                <!-- Welcome message box -->
+                
                 <div class="welcome-message">
                     <h3>Start Your Career Journey Today!</h3>
                     <p id="welcome-user-name">Complete your profile to access exclusive internship opportunities</p>
                 </div>
                 
-                <!-- Introduction text -->
+                
                 <p style="line-height: 1.8; color: #555;">
                     This platform connects students with valuable internship opportunities across various industries. 
                     Whether you're looking to gain practical experience, develop new skills, or explore career paths, 
                     we're here to help you find the perfect internship match.
                 </p>
                 
-                <!-- Call-to-action buttons -->
+                
                 <div style="margin-top: 2rem;">
                     <button onclick="showSection('register')">Complete Your Profile</button>
                     <button onclick="showSection('internships')" style="margin-left: 1rem;" class="btn-secondary">Browse Internships</button>
                 </div>
             </section>
 
-            <!-- REGISTRATION SECTION - Student profile completion form -->
+            <!-- REGISTRATION SECTION -->
             <section id="register-section" class="hidden">
                 <h2>Complete Your Profile</h2>
                 
-                <!-- Form with onsubmit to prevent default behavior and call registration function -->
+                
                 <form id="registration-form" class="registration-form active" onsubmit="registerStudent(event)">
                     
-                    <!-- Row 1: First Name and Last Name (Pre-filled from signup) -->
+                    
                     <div class="form-row">
                         <div class="form-group">
                             <label for="firstName">First Name *</label>
@@ -201,7 +202,7 @@
                         </div>
                     </div>
 
-                    <!-- Row 2: Email and Phone -->
+                    
                     <div class="form-row">
                         <div class="form-group">
                             <label for="email">Email Address *</label>
@@ -213,7 +214,7 @@
                         </div>
                     </div>
 
-                    <!-- Row 3: University and Course -->
+                   
                     <div class="form-row">
                         <div class="form-group">
                             <label for="university">University/College *</label>
@@ -225,7 +226,7 @@
                         </div>
                     </div>
 
-                    <!-- Row 4: Year of Study and GPA -->
+                    
                     <div class="form-row">
                         <div class="form-group">
                             <label for="year">Year of Study *</label>
@@ -243,31 +244,31 @@
                         </div>
                     </div>
 
-                    <!-- Skills input field -->
+                   
                     <div class="form-group">
                         <label for="skills">Skills (comma separated)</label>
                         <input type="text" id="skills" placeholder="e.g., Python, Data Analysis, Communication">
                     </div>
 
-                    <!-- Interests textarea -->
+                   
                     <div class="form-group">
                         <label for="interests">Areas of Interest</label>
                         <textarea id="interests" rows="3" placeholder="Describe your career interests and goals"></textarea>
                     </div>
 
-                    <!-- Submit button -->
+                    
                     <button type="submit">Save Profile</button>
                 </form>
             </section>
 
-            <!-- INTERNSHIPS SECTION - Display available internships -->
+            <!--Displays the available internships -->
             <section id="internships-section" class="hidden">
                 <h2>Available Internships</h2>
                 
-                <!-- Grid container for internship cards -->
+                
                 <div class="internships-grid">
                     
-                    <!-- Internship Card 1 -->
+                  
                     <div class="card">
                         <h3>Software Developer Intern</h3>
                         <p class="company"><b>Company:</b> TechNova Solutions</p>
@@ -277,7 +278,7 @@
                         <button onclick="applyInternship('Software Developer', 'TechNova Solutions')">Apply Now</button>
                     </div>
 
-                    <!-- Internship Card 2 -->
+                   
                     <div class="card">
                         <h3>Data Analyst Intern</h3>
                         <p class="company"><b>Company:</b> DataBridge</p>
@@ -287,7 +288,6 @@
                         <button onclick="applyInternship('Data Analyst', 'DataBridge')">Apply Now</button>
                     </div>
 
-                    <!-- Internship Card 3 -->
                     <div class="card">
                         <h3>Marketing Intern</h3>
                         <p class="company"><b>Company:</b> BrandWave Agency</p>
@@ -297,7 +297,6 @@
                         <button onclick="applyInternship('Marketing', 'BrandWave Agency')">Apply Now</button>
                     </div>
 
-                    <!-- Internship Card 4 -->
                     <div class="card">
                         <h3>Finance Intern</h3>
                         <p class="company"><b>Company:</b> Capital Advisors</p>
@@ -309,11 +308,11 @@
                 </div>
             </section>
 
-            <!-- APPLICATIONS SECTION - Shows student's application history -->
+            <!--application history -->
             <section id="applications-section" class="hidden">
                 <h2>My Applications</h2>
                 
-                <!-- Table to display applications -->
+                <!--applications -->
                 <table class="applications-table">
                     <thead>
                         <tr>
@@ -333,29 +332,28 @@
                 </table>
             </section>
 
-            <!-- PROFILE SECTION - Displays student profile information -->
+            <!-- Will display student profile information -->
             <section id="profile-section" class="hidden">
                 <h2>My Profile</h2>
                 
-                <!-- Profile information container -->
+                
                 <div class="profile-info" id="profile-display">
                     <p style="text-align: center; color: #999; padding: 2rem;">
                         Please complete your profile to view information.
                     </p>
                 </div>
                 
-                <!-- Button to edit profile -->
+              
                 <button onclick="showSection('register')" style="margin-top: 1rem;">Edit Profile</button>
             </section>
         </main>
 
-        <!-- Footer Section -->
+       
         <footer>
             <p>&copy; 2025 InternLink | Developed by Natasha Oyugi</p>
         </footer>
     </div>
 
-    <!-- Link to external JavaScript file for functionality -->
     <script src="script.js"></script>
 </body>
 </html>

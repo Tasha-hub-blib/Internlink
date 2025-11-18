@@ -8,10 +8,15 @@ let userProfile = null;
 // Store user's applications
 let userApplications = [];
 
+// Password reset state
+let resetStep = 1; // 1: request code, 2: verify code, 3: set new password
+let resetEmail = '';
+let resetCode = '';
+
 // API base URL - Auto-detects if running locally or on deployed server
 const API_URL = window.location.hostname === 'localhost' || window.location.hostname === '127.0.0.1'
     ? 'http://localhost:5000'
-    : 'https://YOUR-APP-NAME.onrender.com'; // Replace with your actual Render URL after deployment
+    : window.location.origin; // Use same origin as frontend for deployed version
 
 // ==================== INITIALIZATION ====================
 // This runs when the page loads
@@ -59,6 +64,7 @@ function showAuthForm(formType) {
         signupForm.classList.remove('hidden');
     } else if (formType === 'forgot') {
         forgotForm.classList.remove('hidden');
+        resetPasswordForm(); // Reset the form state
     }
     
     // Clear any error messages
@@ -81,46 +87,163 @@ function showForgotPassword() {
 }
 
 /**
- * Handle password reset
+ * Reset the password reset form to initial state
+ */
+function resetPasswordForm() {
+    resetStep = 1;
+    resetEmail = '';
+    resetCode = '';
+    
+    // Hide all optional fields
+    document.getElementById('reset-code-group').classList.add('hidden');
+    document.getElementById('new-password-group').classList.add('hidden');
+    document.getElementById('confirm-new-password-group').classList.add('hidden');
+    
+    // Clear all fields
+    document.getElementById('reset-email').value = '';
+    document.getElementById('reset-code').value = '';
+    document.getElementById('new-password').value = '';
+    document.getElementById('confirm-new-password').value = '';
+    
+    // Reset button text
+    document.getElementById('reset-submit-btn').textContent = 'Send Reset Code';
+    
+    // Clear messages
+    document.getElementById('forgot-error').classList.add('hidden');
+    document.getElementById('forgot-success').classList.add('hidden');
+}
+
+/**
+ * Handle password reset - multi-step process
  */
 async function resetPassword(event) {
     event.preventDefault();
     
-    const email = document.getElementById('reset-email').value;
     const errorDiv = document.getElementById('forgot-error');
     const successDiv = document.getElementById('forgot-success');
     
+    errorDiv.classList.add('hidden');
+    successDiv.classList.add('hidden');
+    
     try {
-        const response = await fetch(`${API_URL}/api/forgot-password`, {
-            method: 'POST',
-            headers: {
-                'Content-Type': 'application/json',
-            },
-            body: JSON.stringify({ email })
-        });
-        
-        const data = await response.json();
-        
-        if (response.ok) {
-            successDiv.textContent = data.message || 'Password reset instructions sent to your email!';
-            successDiv.classList.remove('hidden');
-            errorDiv.classList.add('hidden');
+        if (resetStep === 1) {
+            // Step 1: Request reset code
+            resetEmail = document.getElementById('reset-email').value;
             
-            // Show message and redirect to login after 3 seconds
-            setTimeout(() => {
-                showAuthForm('login');
-            }, 3000);
-        } else {
-            errorDiv.textContent = data.message || 'Failed to send reset email. Please try again.';
-            errorDiv.classList.remove('hidden');
-            successDiv.classList.add('hidden');
+            const response = await fetch(`${API_URL}/api/forgot-password`, {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json',
+                },
+                body: JSON.stringify({ email: resetEmail })
+            });
+            
+            const data = await response.json();
+            
+            if (response.ok) {
+                // Show success message
+                successDiv.textContent = data.message || 'Reset code sent! Check your email.';
+                successDiv.classList.remove('hidden');
+                
+                // Move to step 2
+                resetStep = 2;
+                resetCode = data.reset_code; // Store the code (in production, this comes via email)
+                
+                // Show code input field
+                document.getElementById('reset-code-group').classList.remove('hidden');
+                document.getElementById('reset-email').readOnly = true;
+                document.getElementById('reset-submit-btn').textContent = 'Verify Code';
+                
+            } else {
+                errorDiv.textContent = data.message || 'Failed to send reset code. Please try again.';
+                errorDiv.classList.remove('hidden');
+            }
+            
+        } else if (resetStep === 2) {
+            // Step 2: Verify code
+            const enteredCode = document.getElementById('reset-code').value;
+            
+            const response = await fetch(`${API_URL}/api/verify-reset-code`, {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json',
+                },
+                body: JSON.stringify({ 
+                    email: resetEmail,
+                    code: enteredCode 
+                })
+            });
+            
+            const data = await response.json();
+            
+            if (response.ok) {
+                successDiv.textContent = 'Code verified! Enter your new password.';
+                successDiv.classList.remove('hidden');
+                
+                // Move to step 3
+                resetStep = 3;
+                
+                // Show password fields
+                document.getElementById('new-password-group').classList.remove('hidden');
+                document.getElementById('confirm-new-password-group').classList.remove('hidden');
+                document.getElementById('reset-code').readOnly = true;
+                document.getElementById('reset-submit-btn').textContent = 'Reset Password';
+                
+            } else {
+                errorDiv.textContent = data.message || 'Invalid code. Please try again.';
+                errorDiv.classList.remove('hidden');
+            }
+            
+        } else if (resetStep === 3) {
+            // Step 3: Set new password
+            const newPassword = document.getElementById('new-password').value;
+            const confirmPassword = document.getElementById('confirm-new-password').value;
+            
+            if (newPassword !== confirmPassword) {
+                errorDiv.textContent = 'Passwords do not match!';
+                errorDiv.classList.remove('hidden');
+                return;
+            }
+            
+            if (newPassword.length < 8) {
+                errorDiv.textContent = 'Password must be at least 8 characters!';
+                errorDiv.classList.remove('hidden');
+                return;
+            }
+            
+            const response = await fetch(`${API_URL}/api/reset-password`, {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json',
+                },
+                body: JSON.stringify({ 
+                    email: resetEmail,
+                    code: document.getElementById('reset-code').value,
+                    new_password: newPassword 
+                })
+            });
+            
+            const data = await response.json();
+            
+            if (response.ok) {
+                successDiv.textContent = 'Password reset successful! Redirecting to login...';
+                successDiv.classList.remove('hidden');
+                
+                // Redirect to login after 2 seconds
+                setTimeout(() => {
+                    showAuthForm('login');
+                }, 2000);
+                
+            } else {
+                errorDiv.textContent = data.message || 'Failed to reset password. Please try again.';
+                errorDiv.classList.remove('hidden');
+            }
         }
         
     } catch (error) {
         console.error('Reset password error:', error);
         errorDiv.textContent = 'Unable to connect to server. Please try again later.';
         errorDiv.classList.remove('hidden');
-        successDiv.classList.add('hidden');
     }
 }
 

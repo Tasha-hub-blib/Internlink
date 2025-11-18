@@ -9,8 +9,8 @@
 body {
     font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
     line-height: 1.6;
-    color: #333;
-    background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+    color: #2c1810;
+    background: linear-gradient(135deg, #8B6F47 0%, #6B4423 100%);
     min-height: 100vh;
 }
 
@@ -26,13 +26,14 @@ body {
 
 /* White box containing the auth forms */
 .auth-box {
-    background: white;
+    background: #FFF8F0;
     border-radius: 20px;
-    box-shadow: 0 20px 60px rgba(0, 0, 0, 0.3);
+    box-shadow: 0 20px 60px rgba(44, 24, 16, 0.4);
     padding: 3rem;
     max-width: 500px;
     width: 100%;
     animation: slideUp 0.5s ease-out;
+    border: 3px solid #A67C52;
 }
 
 /* Slide up animation for auth box */
@@ -54,27 +55,29 @@ body {
 }
 
 .auth-header h1 {
-    color: #667eea;
+    color: #6B4423;
     font-size: 2.5rem;
     margin-bottom: 0.5rem;
+    text-shadow: 2px 2px 4px rgba(107, 68, 35, 0.2);
 }
 
 .auth-header p {
-    color: #666;
+    color: #8B6F47;
     font-size: 1rem;
 }
 
 /* Auth form titles */
 #login-form h2,
-#signup-form h2 {
-    color: #333;
+#signup-form h2,
+#forgot-password-form h2 {
+    color: #6B4423;
     margin-bottom: 0.5rem;
     font-size: 1.8rem;
 }
 
 /* Subtitle under form title */
 .auth-subtitle {
-    color: #666;
+    color: #8B6F47;
     margin-bottom: 2rem;
     font-size: 0.95rem;
 }
@@ -83,46 +86,75 @@ body {
 .auth-toggle {
     text-align: center;
     margin-top: 1.5rem;
-    color: #666;
+    color: #6B4423;
 }
 
 .auth-toggle a {
-    color: #667eea;
+    color: #A67C52;
     text-decoration: none;
     font-weight: 600;
 }
 
 .auth-toggle a:hover {
     text-decoration: underline;
+    color: #6B4423;
 }
 
 /* Error message styling */
 .error-message {
-    background: #fee;
-    color: #c33;
+    background: #f8d7da;
+    color: #721c24;
     padding: 0.75rem;
     border-radius: 8px;
     margin-bottom: 1rem;
     font-size: 0.9rem;
-    border: 1px solid #fcc;
+    border: 1px solid #f5c6cb;
+}
+
+/* Success message styling */
+.success-message {
+    background: #d4edda;
+    color: #155724;
+    padding: 0.75rem;
+    border-radius: 8px;
+    margin-bottom: 1rem;
+    font-size: 0.9rem;
+    border: 1px solid #c3e6cb;
+}
+
+/* Forgot Password Link */
+.forgot-password {
+    text-align: right;
+    margin: -0.5rem 0 1rem 0;
+    font-size: 0.9rem;
+}
+
+.forgot-password a {
+    color: #A67C52;
+    text-decoration: none;
+}
+
+.forgot-password a:hover {
+    text-decoration: underline;
+    color: #6B4423;
 }
 
 /* ==================== NAVIGATION BAR ==================== */
 nav {
-    background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+    background: linear-gradient(135deg, #8B6F47 0%, #6B4423 100%);
     padding: 1rem 2rem;
     display: flex;
     justify-content: space-between;
     align-items: center;
-    box-shadow: 0 2px 10px rgba(0,0,0,0.1);
+    box-shadow: 0 2px 10px rgba(44, 24, 16, 0.3);
     flex-wrap: wrap;
 }
 
 /* User display in navigation */
 .nav-user {
-    color: white;
+    color: #FFF8F0;
     font-weight: 600;
-    background: rgba(255, 255, 255, 0.2);
+    background: rgba(255, 248, 240, 0.2);
     padding: 0.5rem 1rem;
     border-radius: 20px;
     margin-right: 1rem;
@@ -130,7 +162,7 @@ nav {
 
 /* Navigation links */
 nav a {
-    color: white;
+    color: #FFF8F0;
     text-decoration: none;
     padding: 0.5rem 1rem;
     border-radius: 5px;
@@ -139,25 +171,26 @@ nav a {
 }
 
 nav a:hover {
-    background: rgba(255, 255, 255, 0.2);
+    background: rgba(255, 248, 240, 0.2);
 }
 
 /* ==================== HEADER ==================== */
 header {
-    background: white;
+    background: #FFF8F0;
     text-align: center;
     padding: 2rem;
-    box-shadow: 0 2px 5px rgba(0,0,0,0.1);
+    box-shadow: 0 2px 5px rgba(44, 24, 16, 0.2);
 }
 
 header h1 {
-    color: #667eea;
+    color: #6B4423;
     font-size: 2.5rem;
     margin-bottom: 0.5rem;
+    text-shadow: 2px 2px 4px rgba(107, 68, 35, 0.1);
 }
 
 header p {
-    color: #666;
+    color: #8B6F47;
     font-size: 1.1rem;
 }
 
@@ -170,25 +203,26 @@ main {
 
 /* Section styling */
 section {
-    background: white;
+    background: #FFF8F0;
     padding: 2rem;
     border-radius: 10px;
-    box-shadow: 0 2px 10px rgba(0,0,0,0.1);
+    box-shadow: 0 2px 10px rgba(44, 24, 16, 0.2);
     margin-bottom: 2rem;
+    border: 2px solid #D4A574;
 }
 
 section h2 {
-    color: #667eea;
+    color: #6B4423;
     margin-bottom: 1.5rem;
     font-size: 2rem;
-    border-bottom: 3px solid #667eea;
+    border-bottom: 3px solid #A67C52;
     padding-bottom: 0.5rem;
 }
 
 /* ==================== WELCOME MESSAGE ==================== */
 .welcome-message {
-    background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
-    color: white;
+    background: linear-gradient(135deg, #8B6F47 0%, #6B4423 100%);
+    color: #FFF8F0;
     padding: 2rem;
     border-radius: 10px;
     text-align: center;
@@ -217,7 +251,7 @@ section h2 {
 .form-group label {
     display: block;
     margin-bottom: 0.5rem;
-    color: #333;
+    color: #6B4423;
     font-weight: 600;
 }
 
@@ -227,29 +261,30 @@ section h2 {
 .form-group textarea {
     width: 100%;
     padding: 0.75rem;
-    border: 2px solid #ddd;
+    border: 2px solid #D4A574;
     border-radius: 8px;
     font-size: 1rem;
     transition: border-color 0.3s;
+    background: #FFF8F0;
 }
 
 .form-group input:focus,
 .form-group select:focus,
 .form-group textarea:focus {
     outline: none;
-    border-color: #667eea;
+    border-color: #8B6F47;
 }
 
 /* Read-only fields (for pre-filled data) */
 .form-group input[readonly] {
-    background: #f5f5f5;
+    background: #F5E6D3;
     cursor: not-allowed;
 }
 
 /* ==================== BUTTONS ==================== */
 button, .btn-primary {
-    background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
-    color: white;
+    background: linear-gradient(135deg, #8B6F47 0%, #6B4423 100%);
+    color: #FFF8F0;
     padding: 0.75rem 2rem;
     border: none;
     border-radius: 8px;
@@ -261,16 +296,16 @@ button, .btn-primary {
 
 button:hover, .btn-primary:hover {
     transform: translateY(-2px);
-    box-shadow: 0 5px 15px rgba(102, 126, 234, 0.4);
+    box-shadow: 0 5px 15px rgba(107, 68, 35, 0.4);
 }
 
 /* Secondary button style */
 .btn-secondary {
-    background: #6c757d;
+    background: #A67C52;
 }
 
 .btn-secondary:hover {
-    box-shadow: 0 5px 15px rgba(108, 117, 125, 0.4);
+    box-shadow: 0 5px 15px rgba(166, 124, 82, 0.4);
 }
 
 /* ==================== INTERNSHIP CARDS ==================== */
@@ -284,8 +319,8 @@ button:hover, .btn-primary:hover {
 
 /* Individual internship card */
 .card {
-    background: white;
-    border: 2px solid #e0e0e0;
+    background: #FFF8F0;
+    border: 2px solid #D4A574;
     border-radius: 10px;
     padding: 1.5rem;
     transition: transform 0.3s, box-shadow 0.3s;
@@ -293,28 +328,28 @@ button:hover, .btn-primary:hover {
 
 .card:hover {
     transform: translateY(-5px);
-    box-shadow: 0 10px 25px rgba(0,0,0,0.15);
-    border-color: #667eea;
+    box-shadow: 0 10px 25px rgba(107, 68, 35, 0.3);
+    border-color: #8B6F47;
 }
 
 .card h3 {
-    color: #667eea;
+    color: #6B4423;
     margin-bottom: 1rem;
     font-size: 1.4rem;
 }
 
 .card p {
     margin-bottom: 0.5rem;
-    color: #555;
+    color: #4A2E1A;
 }
 
 .card .company {
-    color: #764ba2;
+    color: #8B6F47;
     font-weight: 600;
 }
 
 .card .location {
-    color: #666;
+    color: #6B4423;
 }
 
 .card button {
@@ -333,23 +368,23 @@ button:hover, .btn-primary:hover {
 .applications-table td {
     padding: 1rem;
     text-align: left;
-    border-bottom: 1px solid #ddd;
+    border-bottom: 1px solid #D4A574;
 }
 
 .applications-table th {
-    background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
-    color: white;
+    background: linear-gradient(135deg, #8B6F47 0%, #6B4423 100%);
+    color: #FFF8F0;
     font-weight: 600;
 }
 
 .applications-table tr:hover {
-    background: #f8f9fa;
+    background: #F5E6D3;
 }
 
 /* Status badges */
 .status-pending {
-    background: #ffc107;
-    color: #000;
+    background: #D4A574;
+    color: #2c1810;
     padding: 0.25rem 0.75rem;
     border-radius: 20px;
     font-size: 0.85rem;
@@ -357,7 +392,7 @@ button:hover, .btn-primary:hover {
 }
 
 .status-approved {
-    background: #28a745;
+    background: #6B8E23;
     color: white;
     padding: 0.25rem 0.75rem;
     border-radius: 20px;
@@ -366,7 +401,7 @@ button:hover, .btn-primary:hover {
 }
 
 .status-rejected {
-    background: #dc3545;
+    background: #8B4513;
     color: white;
     padding: 0.25rem 0.75rem;
     border-radius: 20px;
@@ -376,33 +411,33 @@ button:hover, .btn-primary:hover {
 
 /* ==================== PROFILE SECTION ==================== */
 .profile-info {
-    background: #f8f9fa;
+    background: #F5E6D3;
     padding: 2rem;
     border-radius: 10px;
-    border: 2px solid #e0e0e0;
+    border: 2px solid #D4A574;
 }
 
 .profile-info h3 {
-    color: #667eea;
+    color: #6B4423;
     margin-bottom: 1rem;
     font-size: 1.5rem;
 }
 
 .profile-info p {
     margin-bottom: 0.75rem;
-    color: #555;
+    color: #4A2E1A;
 }
 
 .profile-info strong {
-    color: #333;
+    color: #6B4423;
     display: inline-block;
     min-width: 150px;
 }
 
 /* ==================== FOOTER ==================== */
 footer {
-    background: #333;
-    color: white;
+    background: #2c1810;
+    color: #FFF8F0;
     text-align: center;
     padding: 1.5rem;
     margin-top: 3rem;
@@ -452,32 +487,4 @@ footer {
     .auth-header h1 {
         font-size: 2rem;
     }
-}
-/* Add at the end of the file */
-
-/* Forgot Password Link */
-.forgot-password {
-    text-align: right;
-    margin: -0.5rem 0 1rem 0;
-    font-size: 0.9rem;
-}
-
-.forgot-password a {
-    color: #667eea;
-    text-decoration: none;
-}
-
-.forgot-password a:hover {
-    text-decoration: underline;
-}
-
-/* Success Message */
-.success-message {
-    background: #d4edda;
-    color: #155724;
-    padding: 0.75rem;
-    border-radius: 8px;
-    margin-bottom: 1rem;
-    font-size: 0.9rem;
-    border: 1px solid #c3e6cb;
 }

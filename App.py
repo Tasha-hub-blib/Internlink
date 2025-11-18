@@ -1,9 +1,12 @@
 # ==================== IMPORTS ====================
-from flask import Flask, request, jsonify
+from flask import Flask, request, jsonify, send_from_directory
 from flask_cors import CORS
 from werkzeug.security import generate_password_hash, check_password_hash
 import sqlite3
 from datetime import datetime
+import random
+import string
+import os
 
 # ==================== DATABASE CONNECTION ====================
 DATABASE = 'internlink.db'
@@ -71,6 +74,17 @@ def init_db():
             )
         """)
         
+        # Create password reset codes table
+        cursor.execute("""
+            CREATE TABLE IF NOT EXISTS reset_codes (
+                id INTEGER PRIMARY KEY AUTOINCREMENT,
+                email TEXT NOT NULL,
+                code TEXT NOT NULL,
+                created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+                used INTEGER DEFAULT 0
+            )
+        """)
+        
         conn.commit()
         conn.close()
         print("✓ Database initialized")
@@ -79,8 +93,24 @@ def init_db():
 init_db()
 
 # ==================== APP INITIALIZATION ====================
-app = Flask(__name__)
+app = Flask(__name__, static_folder='.')
 CORS(app)
+
+# ==================== STATIC FILE SERVING ====================
+@app.route('/')
+def serve_index():
+    """Serve the main HTML file"""
+    return send_from_directory('.', 'index.html')
+
+@app.route('/<path:path>')
+def serve_static(path):
+    """Serve static files (CSS, JS, etc.)"""
+    return send_from_directory('.', path)
+
+# ==================== HELPER FUNCTIONS ====================
+def generate_reset_code():
+    """Generate a 6-digit random code"""
+    return ''.join(random.choices(string.digits, k=6))
 
 # ==================== AUTHENTICATION ROUTES ====================
 
@@ -190,9 +220,8 @@ def login():
 @app.route('/api/forgot-password', methods=['POST'])
 def forgot_password():
     """
-    Handle forgot password request
-    For now, just validates email exists
-    In production, you'd send an actual email with reset link
+    Handle forgot password request - sends reset code
+    Expected JSON data: email
     """
     try:
         data = request.get_json()
@@ -208,24 +237,138 @@ def forgot_password():
         cursor = conn.cursor()
         cursor.execute("SELECT id FROM users WHERE email = ?", (email,))
         user = cursor.fetchone()
-        conn.close()
         
-        # For security, always return success even if email not found
-        # This prevents email enumeration attacks
         if user:
-            # TODO: In production, generate reset token and send email
-            # For now, just return success
+            # Generate reset code
+            reset_code = generate_reset_code()
+            
+            # Store reset code in database
+            cursor.execute("""
+                INSERT INTO reset_codes (email, code)
+                VALUES (?, ?)
+            """, (email, reset_code))
+            conn.commit()
+            
+            # In production, send this code via email
+            # For now, we'll return it in the response (ONLY FOR DEVELOPMENT)
+            print(f"Reset code for {email}: {reset_code}")
+            
+            conn.close()
             return jsonify({
-                'message': 'If an account exists with this email, you will receive password reset instructions.'
+                'message': f'Reset code sent! For demo purposes, your code is: {reset_code}',
+                'reset_code': reset_code  # Remove this in production
             }), 200
         else:
-            # Still return success for security
+            conn.close()
+            # Still return success for security (don't reveal if email exists)
             return jsonify({
-                'message': 'If an account exists with this email, you will receive password reset instructions.'
+                'message': 'If an account exists with this email, you will receive a reset code.'
             }), 200
         
     except Exception as e:
         print(f"Forgot password error: {e}")
+        return jsonify({'message': 'An error occurred'}), 500
+
+@app.route('/api/verify-reset-code', methods=['POST'])
+def verify_reset_code():
+    """
+    Verify the reset code entered by user
+    Expected JSON data: email, code
+    """
+    try:
+        data = request.get_json()
+        email = data.get('email')
+        code = data.get('code')
+        
+        if not all([email, code]):
+            return jsonify({'message': 'Email and code are required'}), 400
+        
+        conn = get_db_connection()
+        if not conn:
+            return jsonify({'message': 'Database connection failed'}), 500
+        
+        cursor = conn.cursor()
+        
+        # Check if code exists and is not used
+        cursor.execute("""
+            SELECT id FROM reset_codes 
+            WHERE email = ? AND code = ? AND used = 0
+            ORDER BY created_at DESC
+            LIMIT 1
+        """, (email, code))
+        
+        reset_record = cursor.fetchone()
+        conn.close()
+        
+        if reset_record:
+            return jsonify({'message': 'Code verified successfully'}), 200
+        else:
+            return jsonify({'message': 'Invalid or expired code'}), 400
+        
+    except Exception as e:
+        print(f"Verify code error: {e}")
+        return jsonify({'message': 'An error occurred'}), 500
+
+@app.route('/api/reset-password', methods=['POST'])
+def reset_password():
+    """
+    Reset password with verified code
+    Expected JSON data: email, code, new_password
+    """
+    try:
+        data = request.get_json()
+        email = data.get('email')
+        code = data.get('code')
+        new_password = data.get('new_password')
+        
+        if not all([email, code, new_password]):
+            return jsonify({'message': 'All fields are required'}), 400
+        
+        if len(new_password) < 8:
+            return jsonify({'message': 'Password must be at least 8 characters'}), 400
+        
+        conn = get_db_connection()
+        if not conn:
+            return jsonify({'message': 'Database connection failed'}), 500
+        
+        cursor = conn.cursor()
+        
+        # Verify code one more time
+        cursor.execute("""
+            SELECT id FROM reset_codes 
+            WHERE email = ? AND code = ? AND used = 0
+            ORDER BY created_at DESC
+            LIMIT 1
+        """, (email, code))
+        
+        reset_record = cursor.fetchone()
+        
+        if not reset_record:
+            conn.close()
+            return jsonify({'message': 'Invalid or expired code'}), 400
+        
+        # Mark code as used
+        cursor.execute("""
+            UPDATE reset_codes 
+            SET used = 1 
+            WHERE id = ?
+        """, (reset_record['id'],))
+        
+        # Update user password
+        hashed_password = generate_password_hash(new_password)
+        cursor.execute("""
+            UPDATE users 
+            SET password = ? 
+            WHERE email = ?
+        """, (hashed_password, email))
+        
+        conn.commit()
+        conn.close()
+        
+        return jsonify({'message': 'Password reset successful'}), 200
+        
+    except Exception as e:
+        print(f"Reset password error: {e}")
         return jsonify({'message': 'An error occurred'}), 500
 
 # ==================== PROFILE ROUTES ====================
@@ -406,12 +549,12 @@ def apply_internship():
 
 # ==================== RUN SERVER ====================
 if __name__ == '__main__':
-    import os
     
     print("\n" + "="*60)
     print("🎓 INTERNLINK STUDENT PORTAL - PHASE 1")
     print("="*60)
     print("✓ Student registration and login")
+    print("✓ Password reset functionality")
     print("✓ Profile management")
     print("✓ Internship browsing")
     print("✓ Application tracking")
