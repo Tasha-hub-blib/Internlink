@@ -1,0 +1,11 @@
+services:
+  - type: web
+    name: internlink-portal
+    runtime: python
+    buildCommand: pip install -r requirements.txt
+    startCommand: python App.py
+    envVars:
+      - key: PYTHON_VERSION
+        value: 3.12.0
+      - key: FLASK_ENV
+        value: production
