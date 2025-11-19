@@ -499,6 +499,62 @@ def apply_internship():
         return jsonify({'message': 'An error occurred while submitting application'}), 500
 
 
+@app.route('/admin')
+def admin_dashboard():
+    return render_template('admin.html')
+
+@app.route('/admin/users', methods=['GET'])
+def get_all_users():
+    try:
+        conn = get_db_connection()
+        if not conn:
+            return jsonify({'message': 'Database connection failed'}), 500
+        
+        cursor = conn.cursor()
+        cursor.execute("SELECT id, first_name, last_name, email, user_type, created_at FROM users ORDER BY created_at DESC")
+        users = [dict(row) for row in cursor.fetchall()]
+        conn.close()
+        
+        return jsonify(users), 200
+    except Exception as e:
+        print(f"Error fetching users: {e}")
+        return jsonify({'message': 'Error fetching users'}), 500
+
+@app.route('/admin/profiles', methods=['GET'])
+def get_all_profiles():
+    try:
+        conn = get_db_connection()
+        if not conn:
+            return jsonify({'message': 'Database connection failed'}), 500
+        
+        cursor = conn.cursor()
+        cursor.execute("SELECT * FROM profiles ORDER BY created_at DESC")
+        profiles = [dict(row) for row in cursor.fetchall()]
+        conn.close()
+        
+        return jsonify(profiles), 200
+    except Exception as e:
+        print(f"Error fetching profiles: {e}")
+        return jsonify({'message': 'Error fetching profiles'}), 500
+
+@app.route('/admin/applications', methods=['GET'])
+def get_all_applications():
+    try:
+        conn = get_db_connection()
+        if not conn:
+            return jsonify({'message': 'Database connection failed'}), 500
+        
+        cursor = conn.cursor()
+        cursor.execute("SELECT * FROM applications ORDER BY date_applied DESC")
+        applications = [dict(row) for row in cursor.fetchall()]
+        conn.close()
+        
+        return jsonify(applications), 200
+    except Exception as e:
+        print(f"Error fetching applications: {e}")
+        return jsonify({'message': 'Error fetching applications'}), 500
+
+
 if __name__ == '__main__':
     
     print("\n" + "="*60)
@@ -509,6 +565,7 @@ if __name__ == '__main__':
     print("✓ Profile management")
     print("✓ Internship browsing")
     print("✓ Application tracking")
+    print("✓ Admin dashboard")
     print("\n📋 Phase 2 will include:")
     print("  - Organization accounts")
     print("  - Post internships")
