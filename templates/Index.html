@@ -1,20 +1,19 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-    <!-- Character encoding for proper text display -->
+   
     <meta charset="UTF-8">
     
-    <!-- Makes the website responsive on mobile devices -->
+    
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     
-    <!-- Title that appears in browser tab -->
+   
     <title>InternLink - Student Portal</title>
     
-    <!-- Link to external CSS file -->
-    <link rel="stylesheet" href="style.css">
+    <link rel="stylesheet" href="{{ url_for('static', filename='style.css') }}">
 </head>
 <body>
-    <!-- LOGIN SECTION - Shows first when user is not logged in -->
+    <!-- LOGIN SECTION -->
     <div id="login-container" class="auth-container">
         <div class="auth-box">
             <div class="auth-header">
@@ -41,7 +40,7 @@
                     <a href="#" onclick="showForgotPassword(); return false;">Forgot Password?</a>
                 </p>
                 
-                <!-- Display error messages here -->
+                
                 <div id="login-error" class="error-message hidden"></div>
                 
                 <button type="submit" class="btn-primary">Sign In</button>
@@ -52,7 +51,7 @@
                 </p>
             </form>
             
-            <!-- Signup Form - Initially Hidden -->
+            <!-- Signup Form-->
             <form id="signup-form" class="hidden" onsubmit="signupUser(event)">
                 <h2>Create Account</h2>
                 <p class="auth-subtitle">Join InternLink today</p>
@@ -85,7 +84,7 @@
                            placeholder="Re-enter password">
                 </div>
                 
-                <!-- Display error messages here -->
+                
                 <div id="signup-error" class="error-message hidden"></div>
                 
                 <button type="submit" class="btn-primary">Sign Up</button>
@@ -134,7 +133,7 @@
         </div>
     </div>
 
-    <!-- MAIN APPLICATION-->
+   
     <div id="app-container" class="hidden">
         
         <nav>
@@ -332,7 +331,7 @@
                 </table>
             </section>
 
-            <!-- Will display student profile information -->
+            
             <section id="profile-section" class="hidden">
                 <h2>My Profile</h2>
                 
@@ -354,6 +353,6 @@
         </footer>
     </div>
 
-    <script src="script.js"></script>
+    <script src="{{ url_for('static', filename='script.js') }}"></script>
 </body>
 </html>

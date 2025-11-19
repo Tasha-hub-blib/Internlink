@@ -9,12 +9,12 @@ def create_database():
     print("="*50 + "\n")
     
     try:
-        # Connect to database (creates file if it doesn't exist)
+        
         conn = sqlite3.connect('internlink.db')
         cursor = conn.cursor()
         print("✓ Connected to database")
         
-        # Create users table
+        
         cursor.execute('''
             CREATE TABLE IF NOT EXISTS users (
                 id INTEGER PRIMARY KEY AUTOINCREMENT,
@@ -28,7 +28,7 @@ def create_database():
         ''')
         print("✓ Created 'users' table")
         
-        # Create profiles table
+        
         cursor.execute('''
             CREATE TABLE IF NOT EXISTS profiles (
                 id INTEGER PRIMARY KEY AUTOINCREMENT,
@@ -47,7 +47,7 @@ def create_database():
         ''')
         print("✓ Created 'profiles' table")
         
-        # Create applications table
+       
         cursor.execute('''
             CREATE TABLE IF NOT EXISTS applications (
                 id INTEGER PRIMARY KEY AUTOINCREMENT,

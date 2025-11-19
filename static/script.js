@@ -1,73 +1,70 @@
-// ==================== GLOBAL VARIABLES ====================
-// Store the current logged-in user data
 let currentUser = null;
 
-// Store user's profile data
+
 let userProfile = null;
 
-// Store user's applications
+
 let userApplications = [];
 
-// Password reset state
-let resetStep = 1; // 1: request code, 2: verify code, 3: set new password
+
+let resetStep = 1; 
 let resetEmail = '';
 let resetCode = '';
 
-// API base URL - Auto-detects if running locally or on deployed server
+
 const API_URL = window.location.hostname === 'localhost' || window.location.hostname === '127.0.0.1'
     ? 'http://localhost:5000'
-    : window.location.origin; // Use same origin as frontend for deployed version
+    : window.location.origin; 
 
-// ==================== INITIALIZATION ====================
-// This runs when the page loads
+
 document.addEventListener('DOMContentLoaded', function() {
-    // Check if user is already logged in (stored in browser session)
+    
     checkLoginStatus();
 });
 
-// ==================== AUTHENTICATION FUNCTIONS ====================
 
-/**
- * Check if user is already logged in by checking sessionStorage
- */
+
+
+ 
+ 
 function checkLoginStatus() {
     const storedUser = sessionStorage.getItem('currentUser');
     
     if (storedUser) {
-        // User is logged in
+        
         currentUser = JSON.parse(storedUser);
         showMainApp();
         loadUserData();
     } else {
-        // User is not logged in - show login form
+        
         showLoginForm();
     }
 }
 
-/**
- * Show/hide different auth forms (login, signup, or forgot password)
- */
+
+ 
+ 
 function showAuthForm(formType) {
     const loginForm = document.getElementById('login-form');
     const signupForm = document.getElementById('signup-form');
     const forgotForm = document.getElementById('forgot-password-form');
     
-    // Hide all forms
+  
     loginForm.classList.add('hidden');
     signupForm.classList.add('hidden');
     if (forgotForm) forgotForm.classList.add('hidden');
     
-    // Show requested form
+    
     if (formType === 'login') {
         loginForm.classList.remove('hidden');
     } else if (formType === 'signup') {
         signupForm.classList.remove('hidden');
     } else if (formType === 'forgot') {
         forgotForm.classList.remove('hidden');
-        resetPasswordForm(); // Reset the form state
+        resetPasswordForm(); 
     }
     
-    // Clear any error messages
+   
     document.getElementById('login-error').classList.add('hidden');
     document.getElementById('signup-error').classList.add('hidden');
     if (document.getElementById('forgot-error')) {
@@ -78,44 +75,42 @@ function showAuthForm(formType) {
     }
 }
 
-/**
- * Show forgot password form
- */
+
+ 
+ 
 function showForgotPassword() {
     showAuthForm('forgot');
     return false;
 }
 
-/**
- * Reset the password reset form to initial state
- */
+
+ 
+ 
 function resetPasswordForm() {
     resetStep = 1;
     resetEmail = '';
     resetCode = '';
     
-    // Hide all optional fields
+    
     document.getElementById('reset-code-group').classList.add('hidden');
     document.getElementById('new-password-group').classList.add('hidden');
     document.getElementById('confirm-new-password-group').classList.add('hidden');
     
-    // Clear all fields
+    
     document.getElementById('reset-email').value = '';
     document.getElementById('reset-code').value = '';
     document.getElementById('new-password').value = '';
     document.getElementById('confirm-new-password').value = '';
     
-    // Reset button text
+    
     document.getElementById('reset-submit-btn').textContent = 'Send Reset Code';
     
-    // Clear messages
+   
     document.getElementById('forgot-error').classList.add('hidden');
     document.getElementById('forgot-success').classList.add('hidden');
 }
 
-/**
- * Handle password reset - multi-step process
- */
+
 async function resetPassword(event) {
     event.preventDefault();
     
@@ -127,7 +122,7 @@ async function resetPassword(event) {
     
     try {
         if (resetStep === 1) {
-            // Step 1: Request reset code
+           
             resetEmail = document.getElementById('reset-email').value;
             
             const response = await fetch(`${API_URL}/api/forgot-password`, {
@@ -141,15 +136,15 @@ async function resetPassword(event) {
             const data = await response.json();
             
             if (response.ok) {
-                // Show success message
+               
                 successDiv.textContent = data.message || 'Reset code sent! Check your email.';
                 successDiv.classList.remove('hidden');
                 
-                // Move to step 2
-                resetStep = 2;
-                resetCode = data.reset_code; // Store the code (in production, this comes via email)
                 
-                // Show code input field
+                resetStep = 2;
+                resetCode = data.reset_code; 
+                
+                
                 document.getElementById('reset-code-group').classList.remove('hidden');
                 document.getElementById('reset-email').readOnly = true;
                 document.getElementById('reset-submit-btn').textContent = 'Verify Code';
@@ -160,7 +155,7 @@ async function resetPassword(event) {
             }
             
         } else if (resetStep === 2) {
-            // Step 2: Verify code
+            
             const enteredCode = document.getElementById('reset-code').value;
             
             const response = await fetch(`${API_URL}/api/verify-reset-code`, {
@@ -180,10 +175,10 @@ async function resetPassword(event) {
                 successDiv.textContent = 'Code verified! Enter your new password.';
                 successDiv.classList.remove('hidden');
                 
-                // Move to step 3
+                
                 resetStep = 3;
                 
-                // Show password fields
+                
                 document.getElementById('new-password-group').classList.remove('hidden');
                 document.getElementById('confirm-new-password-group').classList.remove('hidden');
                 document.getElementById('reset-code').readOnly = true;
@@ -195,7 +190,7 @@ async function resetPassword(event) {
             }
             
         } else if (resetStep === 3) {
-            // Step 3: Set new password
+            
             const newPassword = document.getElementById('new-password').value;
             const confirmPassword = document.getElementById('confirm-new-password').value;
             
@@ -229,7 +224,7 @@ async function resetPassword(event) {
                 successDiv.textContent = 'Password reset successful! Redirecting to login...';
                 successDiv.classList.remove('hidden');
                 
-                // Redirect to login after 2 seconds
+                
                 setTimeout(() => {
                     showAuthForm('login');
                 }, 2000);
@@ -247,9 +242,9 @@ async function resetPassword(event) {
     }
 }
 
-/**
- * Handle user login
- */
+
+ 
+ 
 async function loginUser(event) {
     event.preventDefault();
     
@@ -285,9 +280,9 @@ async function loginUser(event) {
     }
 }
 
-/**
- * Handle user signup/registration
- */
+
+ 
+ 
 async function signupUser(event) {
     event.preventDefault();
     
@@ -343,9 +338,8 @@ async function signupUser(event) {
     }
 }
 
-/**
- * Handle user logout
- */
+
+ 
 function logout() {
     currentUser = null;
     userProfile = null;
@@ -356,7 +350,7 @@ function logout() {
     document.getElementById('signup-form').reset();
 }
 
-// ==================== UI DISPLAY FUNCTIONS ====================
+
 
 function showLoginForm() {
     document.getElementById('login-container').classList.remove('hidden');
@@ -395,7 +389,7 @@ function showSection(sectionName) {
     }
 }
 
-// ==================== DATA LOADING FUNCTIONS ====================
+
 
 async function loadUserData() {
     if (!currentUser) return;
@@ -517,7 +511,6 @@ async function applyInternship(position, company) {
     }
 }
 
-// ==================== DISPLAY FUNCTIONS ====================
 
 function displayProfile() {
     const profileDisplay = document.getElementById('profile-display');

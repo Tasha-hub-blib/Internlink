@@ -1,5 +1,4 @@
-# ==================== IMPORTS ====================
-from flask import Flask, request, jsonify, send_from_directory
+from flask import Flask, request, jsonify, render_template
 from flask_cors import CORS
 from werkzeug.security import generate_password_hash, check_password_hash
 import sqlite3
@@ -8,29 +7,25 @@ import random
 import string
 import os
 
-# ==================== DATABASE CONNECTION ====================
+
 DATABASE = 'internlink.db'
 
 def get_db_connection():
-    """
-    Create and return a database connection
-    """
     try:
         conn = sqlite3.connect(DATABASE)
-        conn.row_factory = sqlite3.Row  # Return rows as dictionaries
+        conn.row_factory = sqlite3.Row 
         return conn
     except Exception as e:
         print(f"Error connecting to database: {e}")
         return None
 
-# ==================== DATABASE INITIALIZATION ====================
+
 def init_db():
-    """Initialize database tables if they don't exist"""
     conn = get_db_connection()
     if conn:
         cursor = conn.cursor()
         
-        # Create users table
+        
         cursor.execute("""
             CREATE TABLE IF NOT EXISTS users (
                 id INTEGER PRIMARY KEY AUTOINCREMENT,
@@ -43,7 +38,7 @@ def init_db():
             )
         """)
         
-        # Create profiles table
+        
         cursor.execute("""
             CREATE TABLE IF NOT EXISTS profiles (
                 id INTEGER PRIMARY KEY AUTOINCREMENT,
@@ -61,7 +56,7 @@ def init_db():
             )
         """)
         
-        # Create applications table
+       
         cursor.execute("""
             CREATE TABLE IF NOT EXISTS applications (
                 id INTEGER PRIMARY KEY AUTOINCREMENT,
@@ -74,7 +69,7 @@ def init_db():
             )
         """)
         
-        # Create password reset codes table
+        
         cursor.execute("""
             CREATE TABLE IF NOT EXISTS reset_codes (
                 id INTEGER PRIMARY KEY AUTOINCREMENT,
@@ -89,38 +84,26 @@ def init_db():
         conn.close()
         print("✓ Database initialized")
 
-# Initialize database when app starts
+
 init_db()
 
-# ==================== APP INITIALIZATION ====================
-app = Flask(__name__, static_folder='.')
+
+app = Flask(__name__)
 CORS(app)
 
-# ==================== STATIC FILE SERVING ====================
+
 @app.route('/')
 def serve_index():
-    """Serve the main HTML file"""
-    return send_from_directory('.', 'index.html')
+    return render_template('index.html')
 
-@app.route('/<path:path>')
-def serve_static(path):
-    """Serve static files (CSS, JS, etc.)"""
-    return send_from_directory('.', path)
 
-# ==================== HELPER FUNCTIONS ====================
 def generate_reset_code():
-    """Generate a 6-digit random code"""
     return ''.join(random.choices(string.digits, k=6))
 
-# ==================== AUTHENTICATION ROUTES ====================
+
 
 @app.route('/api/signup', methods=['POST'])
 def signup():
-    """
-    Handle user registration/signup
-    PHASE 1: Student registration only
-    Expected JSON data: first_name, last_name, email, password
-    """
     try:
         data = request.get_json()
         first_name = data.get('first_name')
@@ -138,16 +121,16 @@ def signup():
         
         cursor = conn.cursor()
         
-        # Check if email already exists
+        
         cursor.execute("SELECT id FROM users WHERE email = ?", (email,))
         if cursor.fetchone():
             conn.close()
             return jsonify({'message': 'Email already registered'}), 400
         
-        # Hash password
+        
         hashed_password = generate_password_hash(password)
         
-        # Insert new user
+        
         cursor.execute("""
             INSERT INTO users (first_name, last_name, email, password, user_type)
             VALUES (?, ?, ?, ?, ?)
@@ -173,11 +156,6 @@ def signup():
 
 @app.route('/api/login', methods=['POST'])
 def login():
-    """
-    Handle user login
-    PHASE 1: Student login only
-    Expected JSON data: email, password
-    """
     try:
         data = request.get_json()
         email = data.get('email')
@@ -219,10 +197,6 @@ def login():
 
 @app.route('/api/forgot-password', methods=['POST'])
 def forgot_password():
-    """
-    Handle forgot password request - sends reset code
-    Expected JSON data: email
-    """
     try:
         data = request.get_json()
         email = data.get('email')
@@ -239,28 +213,27 @@ def forgot_password():
         user = cursor.fetchone()
         
         if user:
-            # Generate reset code
+            
             reset_code = generate_reset_code()
             
-            # Store reset code in database
+            
             cursor.execute("""
                 INSERT INTO reset_codes (email, code)
                 VALUES (?, ?)
             """, (email, reset_code))
             conn.commit()
             
-            # In production, send this code via email
-            # For now, we'll return it in the response (ONLY FOR DEVELOPMENT)
+           
             print(f"Reset code for {email}: {reset_code}")
             
             conn.close()
             return jsonify({
                 'message': f'Reset code sent! For demo purposes, your code is: {reset_code}',
-                'reset_code': reset_code  # Remove this in production
+                'reset_code': reset_code  
             }), 200
         else:
             conn.close()
-            # Still return success for security (don't reveal if email exists)
+            
             return jsonify({
                 'message': 'If an account exists with this email, you will receive a reset code.'
             }), 200
@@ -271,10 +244,6 @@ def forgot_password():
 
 @app.route('/api/verify-reset-code', methods=['POST'])
 def verify_reset_code():
-    """
-    Verify the reset code entered by user
-    Expected JSON data: email, code
-    """
     try:
         data = request.get_json()
         email = data.get('email')
@@ -289,7 +258,7 @@ def verify_reset_code():
         
         cursor = conn.cursor()
         
-        # Check if code exists and is not used
+        
         cursor.execute("""
             SELECT id FROM reset_codes 
             WHERE email = ? AND code = ? AND used = 0
@@ -311,10 +280,6 @@ def verify_reset_code():
 
 @app.route('/api/reset-password', methods=['POST'])
 def reset_password():
-    """
-    Reset password with verified code
-    Expected JSON data: email, code, new_password
-    """
     try:
         data = request.get_json()
         email = data.get('email')
@@ -333,7 +298,7 @@ def reset_password():
         
         cursor = conn.cursor()
         
-        # Verify code one more time
+       
         cursor.execute("""
             SELECT id FROM reset_codes 
             WHERE email = ? AND code = ? AND used = 0
@@ -347,14 +312,14 @@ def reset_password():
             conn.close()
             return jsonify({'message': 'Invalid or expired code'}), 400
         
-        # Mark code as used
+        
         cursor.execute("""
             UPDATE reset_codes 
             SET used = 1 
             WHERE id = ?
         """, (reset_record['id'],))
         
-        # Update user password
+        
         hashed_password = generate_password_hash(new_password)
         cursor.execute("""
             UPDATE users 
@@ -371,13 +336,10 @@ def reset_password():
         print(f"Reset password error: {e}")
         return jsonify({'message': 'An error occurred'}), 500
 
-# ==================== PROFILE ROUTES ====================
+
 
 @app.route('/api/profile/<int:user_id>', methods=['GET'])
 def get_profile(user_id):
-    """
-    Get user profile by user ID
-    """
     try:
         conn = get_db_connection()
         if not conn:
@@ -400,10 +362,6 @@ def get_profile(user_id):
 
 @app.route('/api/profile', methods=['POST'])
 def save_profile():
-    """
-    Create or update user profile
-    Expected JSON data: user_id, phone, university, course, year, gpa, skills, interests
-    """
     try:
         data = request.get_json()
         user_id = data.get('user_id')
@@ -417,12 +375,12 @@ def save_profile():
         
         cursor = conn.cursor()
         
-        # Check if profile exists
+        
         cursor.execute("SELECT id FROM profiles WHERE user_id = ?", (user_id,))
         existing = cursor.fetchone()
         
         if existing:
-            # Update
+            
             cursor.execute("""
                 UPDATE profiles 
                 SET phone = ?, university = ?, course = ?, year = ?, 
@@ -440,7 +398,7 @@ def save_profile():
                 user_id
             ))
         else:
-            # Insert
+            
             cursor.execute("""
                 INSERT INTO profiles 
                 (user_id, phone, university, course, year, gpa, skills, interests)
@@ -458,7 +416,7 @@ def save_profile():
         
         conn.commit()
         
-        # Get profile
+        
         cursor.execute("SELECT * FROM profiles WHERE user_id = ?", (user_id,))
         profile = cursor.fetchone()
         
@@ -469,13 +427,10 @@ def save_profile():
         print(f"Save profile error: {e}")
         return jsonify({'message': 'An error occurred while saving profile'}), 500
 
-# ==================== APPLICATION ROUTES ====================
+
 
 @app.route('/api/applications/<int:user_id>', methods=['GET'])
 def get_applications(user_id):
-    """
-    Get all applications for a user
-    """
     try:
         conn = get_db_connection()
         if not conn:
@@ -499,10 +454,6 @@ def get_applications(user_id):
 
 @app.route('/api/apply', methods=['POST'])
 def apply_internship():
-    """
-    Submit internship application
-    Expected JSON data: user_id, position, company
-    """
     try:
         data = request.get_json()
         user_id = data.get('user_id')
@@ -518,7 +469,7 @@ def apply_internship():
         
         cursor = conn.cursor()
         
-        # Check if already applied
+       
         cursor.execute("""
             SELECT id FROM applications 
             WHERE user_id = ? AND position = ? AND company = ?
@@ -528,7 +479,7 @@ def apply_internship():
             conn.close()
             return jsonify({'message': 'Already applied to this internship'}), 400
         
-        # Insert application
+        
         cursor.execute("""
             INSERT INTO applications (user_id, position, company, status)
             VALUES (?, ?, ?, ?)
@@ -547,7 +498,7 @@ def apply_internship():
         print(f"Apply error: {e}")
         return jsonify({'message': 'An error occurred while submitting application'}), 500
 
-# ==================== RUN SERVER ====================
+
 if __name__ == '__main__':
     
     print("\n" + "="*60)
@@ -564,9 +515,7 @@ if __name__ == '__main__':
     print("  - Review applications")
     print("="*60)
     
-    # Get port from environment variable (for deployment) or use 5000 (for local)
     port = int(os.environ.get('PORT', 5000))
-    # Set debug=False for production, True for local development
     debug = os.environ.get('FLASK_ENV') != 'production'
     
     print(f"\n🚀 Server running on port {port}")

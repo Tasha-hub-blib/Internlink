@@ -1,6 +1,4 @@
-/* ==================== GLOBAL STYLES ==================== */
-/* Reset default browser styles and set base font */
-* {
+*{
     margin: 0;
     padding: 0;
     box-sizing: border-box;
@@ -13,9 +11,6 @@ body {
     background: linear-gradient(135deg, #8B6F47 0%, #6B4423 100%);
     min-height: 100vh;
 }
-
-/* ==================== AUTHENTICATION STYLES ==================== */
-/* Container for login/signup forms - full screen centered */
 .auth-container {
     display: flex;
     justify-content: center;
@@ -24,7 +19,7 @@ body {
     padding: 2rem;
 }
 
-/* White box containing the auth forms */
+
 .auth-box {
     background: #FFF8F0;
     border-radius: 20px;
@@ -36,7 +31,7 @@ body {
     border: 3px solid #A67C52;
 }
 
-/* Slide up animation for auth box */
+
 @keyframes slideUp {
     from {
         opacity: 0;
@@ -48,7 +43,7 @@ body {
     }
 }
 
-/* Header section in auth box */
+
 .auth-header {
     text-align: center;
     margin-bottom: 2rem;
@@ -66,7 +61,7 @@ body {
     font-size: 1rem;
 }
 
-/* Auth form titles */
+
 #login-form h2,
 #signup-form h2,
 #forgot-password-form h2 {
@@ -75,14 +70,14 @@ body {
     font-size: 1.8rem;
 }
 
-/* Subtitle under form title */
+
 .auth-subtitle {
     color: #8B6F47;
     margin-bottom: 2rem;
     font-size: 0.95rem;
 }
 
-/* Toggle between login and signup */
+
 .auth-toggle {
     text-align: center;
     margin-top: 1.5rem;
@@ -100,7 +95,6 @@ body {
     color: #6B4423;
 }
 
-/* Error message styling */
 .error-message {
     background: #f8d7da;
     color: #721c24;
@@ -110,8 +104,6 @@ body {
     font-size: 0.9rem;
     border: 1px solid #f5c6cb;
 }
-
-/* Success message styling */
 .success-message {
     background: #d4edda;
     color: #155724;
@@ -122,7 +114,6 @@ body {
     border: 1px solid #c3e6cb;
 }
 
-/* Forgot Password Link */
 .forgot-password {
     text-align: right;
     margin: -0.5rem 0 1rem 0;
@@ -139,7 +130,7 @@ body {
     color: #6B4423;
 }
 
-/* ==================== NAVIGATION BAR ==================== */
+
 nav {
     background: linear-gradient(135deg, #8B6F47 0%, #6B4423 100%);
     padding: 1rem 2rem;
@@ -150,7 +141,7 @@ nav {
     flex-wrap: wrap;
 }
 
-/* User display in navigation */
+
 .nav-user {
     color: #FFF8F0;
     font-weight: 600;
@@ -160,7 +151,7 @@ nav {
     margin-right: 1rem;
 }
 
-/* Navigation links */
+
 nav a {
     color: #FFF8F0;
     text-decoration: none;
@@ -174,7 +165,7 @@ nav a:hover {
     background: rgba(255, 248, 240, 0.2);
 }
 
-/* ==================== HEADER ==================== */
+
 header {
     background: #FFF8F0;
     text-align: center;
@@ -194,14 +185,14 @@ header p {
     font-size: 1.1rem;
 }
 
-/* ==================== MAIN CONTENT ==================== */
+
 main {
     max-width: 1200px;
     margin: 2rem auto;
     padding: 0 2rem;
 }
 
-/* Section styling */
+
 section {
     background: #FFF8F0;
     padding: 2rem;
@@ -219,7 +210,7 @@ section h2 {
     padding-bottom: 0.5rem;
 }
 
-/* ==================== WELCOME MESSAGE ==================== */
+
 .welcome-message {
     background: linear-gradient(135deg, #8B6F47 0%, #6B4423 100%);
     color: #FFF8F0;
@@ -234,8 +225,7 @@ section h2 {
     margin-bottom: 0.5rem;
 }
 
-/* ==================== FORMS ==================== */
-/* Form row for side-by-side inputs */
+
 .form-row {
     display: grid;
     grid-template-columns: 1fr 1fr;
@@ -243,7 +233,7 @@ section h2 {
     margin-bottom: 1rem;
 }
 
-/* Individual form field */
+
 .form-group {
     margin-bottom: 1rem;
 }
@@ -255,7 +245,7 @@ section h2 {
     font-weight: 600;
 }
 
-/* Input field styling */
+
 .form-group input,
 .form-group select,
 .form-group textarea {
@@ -275,13 +265,13 @@ section h2 {
     border-color: #8B6F47;
 }
 
-/* Read-only fields (for pre-filled data) */
+
 .form-group input[readonly] {
     background: #F5E6D3;
     cursor: not-allowed;
 }
 
-/* ==================== BUTTONS ==================== */
+
 button, .btn-primary {
     background: linear-gradient(135deg, #8B6F47 0%, #6B4423 100%);
     color: #FFF8F0;
@@ -299,7 +289,7 @@ button:hover, .btn-primary:hover {
     box-shadow: 0 5px 15px rgba(107, 68, 35, 0.4);
 }
 
-/* Secondary button style */
+
 .btn-secondary {
     background: #A67C52;
 }
@@ -308,8 +298,8 @@ button:hover, .btn-primary:hover {
     box-shadow: 0 5px 15px rgba(166, 124, 82, 0.4);
 }
 
-/* ==================== INTERNSHIP CARDS ==================== */
-/* Grid layout for internship cards */
+
+
 .internships-grid {
     display: grid;
     grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
@@ -317,7 +307,7 @@ button:hover, .btn-primary:hover {
     margin-top: 2rem;
 }
 
-/* Individual internship card */
+
 .card {
     background: #FFF8F0;
     border: 2px solid #D4A574;
@@ -357,7 +347,7 @@ button:hover, .btn-primary:hover {
     margin-top: 1rem;
 }
 
-/* ==================== APPLICATIONS TABLE ==================== */
+
 .applications-table {
     width: 100%;
     border-collapse: collapse;
@@ -381,7 +371,7 @@ button:hover, .btn-primary:hover {
     background: #F5E6D3;
 }
 
-/* Status badges */
+
 .status-pending {
     background: #D4A574;
     color: #2c1810;
@@ -409,7 +399,7 @@ button:hover, .btn-primary:hover {
     font-weight: 600;
 }
 
-/* ==================== PROFILE SECTION ==================== */
+
 .profile-info {
     background: #F5E6D3;
     padding: 2rem;
@@ -434,7 +424,7 @@ button:hover, .btn-primary:hover {
     min-width: 150px;
 }
 
-/* ==================== FOOTER ==================== */
+
 footer {
     background: #2c1810;
     color: #FFF8F0;
@@ -443,21 +433,20 @@ footer {
     margin-top: 3rem;
 }
 
-/* ==================== UTILITY CLASSES ==================== */
-/* Hidden class to hide elements */
+
 .hidden {
     display: none !important;
 }
 
-/* ==================== RESPONSIVE DESIGN ==================== */
-/* Tablet and smaller screens */
+
+
 @media (max-width: 768px) {
-    /* Stack form fields vertically on mobile */
+    
     .form-row {
         grid-template-columns: 1fr;
     }
     
-    /* Reduce navigation padding */
+   
     nav {
         padding: 1rem;
         justify-content: center;
@@ -469,17 +458,17 @@ footer {
         margin-bottom: 0.5rem;
     }
     
-    /* Reduce header font size */
+    
     header h1 {
         font-size: 2rem;
     }
     
-    /* Stack internship cards on mobile */
+    
     .internships-grid {
         grid-template-columns: 1fr;
     }
     
-    /* Reduce auth box padding */
+   
     .auth-box {
         padding: 2rem 1.5rem;
     }
