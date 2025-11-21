@@ -11,27 +11,42 @@ const API_URL = window.location.hostname === 'localhost' || window.location.host
 
 document.addEventListener('DOMContentLoaded', function() {
     checkLoginStatus();
-    setupMobileMenu();
 });
 
-// Mobile Menu Toggle Function
+// Mobile Menu Toggle Function - Updated to work properly
 function setupMobileMenu() {
     const hamburger = document.querySelector('.hamburger');
     const navLinks = document.querySelector('.nav-links');
     
-    if (hamburger) {
-        hamburger.addEventListener('click', function() {
+    if (hamburger && navLinks) {
+        // Remove any existing event listeners by cloning
+        const newHamburger = hamburger.cloneNode(true);
+        hamburger.parentNode.replaceChild(newHamburger, hamburger);
+        
+        // Add click event to hamburger
+        newHamburger.addEventListener('click', function(e) {
+            e.preventDefault();
+            e.stopPropagation();
             this.classList.toggle('active');
             navLinks.classList.toggle('active');
+            console.log('Menu toggled'); // Debug log
         });
         
         // Close menu when clicking on a link
-        const navItems = document.querySelectorAll('.nav-links a');
+        const navItems = navLinks.querySelectorAll('a');
         navItems.forEach(link => {
             link.addEventListener('click', () => {
-                hamburger.classList.remove('active');
+                newHamburger.classList.remove('active');
                 navLinks.classList.remove('active');
             });
+        });
+        
+        // Close menu when clicking outside
+        document.addEventListener('click', function(e) {
+            if (!newHamburger.contains(e.target) && !navLinks.contains(e.target)) {
+                newHamburger.classList.remove('active');
+                navLinks.classList.remove('active');
+            }
         });
     }
 }
@@ -340,7 +355,11 @@ function showMainApp() {
     }
     
     showSection('home');
-    setupMobileMenu();
+    
+    // Initialize mobile menu after a short delay to ensure DOM is ready
+    setTimeout(() => {
+        setupMobileMenu();
+    }, 100);
 }
 
 function showSection(sectionName) {
