@@ -1,18 +1,13 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-   
     <meta charset="UTF-8">
-    
-    
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    
-   
     <title>InternLink - Student Portal</title>
-    
     <link rel="stylesheet" href="{{ url_for('static', filename='style.css') }}">
 </head>
 <body>
+    
     <!-- LOGIN SECTION -->
     <div id="login-container" class="auth-container">
         <div class="auth-box">
@@ -39,7 +34,6 @@
                 <p class="forgot-password">
                     <a href="#" onclick="showForgotPassword(); return false;">Forgot Password?</a>
                 </p>
-                
                 
                 <div id="login-error" class="error-message hidden"></div>
                 
@@ -83,7 +77,6 @@
                     <input type="password" id="signup-confirm-password" required 
                            placeholder="Re-enter password">
                 </div>
-                
                 
                 <div id="signup-error" class="error-message hidden"></div>
                 
@@ -133,22 +126,29 @@
         </div>
     </div>
 
-   
     <div id="app-container" class="hidden">
         
         <nav>
-            
             <div class="nav-user">
                 <span id="nav-username">Student</span>
             </div>
             
+            <!-- Hamburger Menu Icon -->
+            <div class="hamburger">
+                <span></span>
+                <span></span>
+                <span></span>
+            </div>
             
-            <a href="#" onclick="showSection('home'); return false;">🏠 Home</a>
-            <a href="#" onclick="showSection('register'); return false;">📝 Complete Profile</a>
-            <a href="#" onclick="showSection('internships'); return false;">💼 Available Internships</a>
-            <a href="#" onclick="showSection('applications'); return false;">📋 My Applications</a>
-            <a href="#" onclick="showSection('profile'); return false;">👤 Profile</a>
-            <a href="#" onclick="logout(); return false;">🚪 Log Out</a>
+            <!-- Navigation Links -->
+            <div class="nav-links">
+                <a href="#" onclick="showSection('home'); return false;">🏠 Home</a>
+                <a href="#" onclick="showSection('register'); return false;">📝 Complete Profile</a>
+                <a href="#" onclick="showSection('internships'); return false;">💼 Available Internships</a>
+                <a href="#" onclick="showSection('applications'); return false;">📋 My Applications</a>
+                <a href="#" onclick="showSection('profile'); return false;">👤 Profile</a>
+                <a href="#" onclick="logout(); return false;">🚪 Log Out</a>
+            </div>
         </nav>
 
         <header>
@@ -156,25 +156,21 @@
             <p>Your springboard to professional excellence</p>
         </header>
 
-        
         <main>
             <!-- HOME PAGE-->
             <section id="home-section">
                 <h2>Welcome to InternLink Student Portal</h2>
-                
                 
                 <div class="welcome-message">
                     <h3>Start Your Career Journey Today!</h3>
                     <p id="welcome-user-name">Complete your profile to access exclusive internship opportunities</p>
                 </div>
                 
-                
                 <p style="line-height: 1.8; color: #555;">
                     This platform connects students with valuable internship opportunities across various industries. 
                     Whether you're looking to gain practical experience, develop new skills, or explore career paths, 
                     we're here to help you find the perfect internship match.
                 </p>
-                
                 
                 <div style="margin-top: 2rem;">
                     <button onclick="showSection('register')">Complete Your Profile</button>
@@ -186,9 +182,7 @@
             <section id="register-section" class="hidden">
                 <h2>Complete Your Profile</h2>
                 
-                
                 <form id="registration-form" class="registration-form active" onsubmit="registerStudent(event)">
-                    
                     
                     <div class="form-row">
                         <div class="form-group">
@@ -201,7 +195,6 @@
                         </div>
                     </div>
 
-                    
                     <div class="form-row">
                         <div class="form-group">
                             <label for="email">Email Address *</label>
@@ -213,7 +206,6 @@
                         </div>
                     </div>
 
-                   
                     <div class="form-row">
                         <div class="form-group">
                             <label for="university">University/College *</label>
@@ -225,7 +217,6 @@
                         </div>
                     </div>
 
-                    
                     <div class="form-row">
                         <div class="form-group">
                             <label for="year">Year of Study *</label>
@@ -243,19 +234,16 @@
                         </div>
                     </div>
 
-                   
                     <div class="form-group">
                         <label for="skills">Skills (comma separated)</label>
                         <input type="text" id="skills" placeholder="e.g., Python, Data Analysis, Communication">
                     </div>
 
-                   
                     <div class="form-group">
                         <label for="interests">Areas of Interest</label>
                         <textarea id="interests" rows="3" placeholder="Describe your career interests and goals"></textarea>
                     </div>
 
-                    
                     <button type="submit">Save Profile</button>
                 </form>
             </section>
@@ -264,10 +252,8 @@
             <section id="internships-section" class="hidden">
                 <h2>Available Internships</h2>
                 
-                
                 <div class="internships-grid">
                     
-                  
                     <div class="card">
                         <h3>Software Developer Intern</h3>
                         <p class="company"><b>Company:</b> TechNova Solutions</p>
@@ -277,7 +263,6 @@
                         <button onclick="applyInternship('Software Developer', 'TechNova Solutions')">Apply Now</button>
                     </div>
 
-                   
                     <div class="card">
                         <h3>Data Analyst Intern</h3>
                         <p class="company"><b>Company:</b> DataBridge</p>
@@ -311,30 +296,30 @@
             <section id="applications-section" class="hidden">
                 <h2>My Applications</h2>
                 
-                <!--applications -->
-                <table class="applications-table">
-                    <thead>
-                        <tr>
-                            <th>Position</th>
-                            <th>Company</th>
-                            <th>Date Applied</th>
-                            <th>Status</th>
-                        </tr>
-                    </thead>
-                    <tbody id="applications-tbody">
-                        <tr>
-                            <td colspan="4" style="text-align: center; padding: 2rem; color: #999;">
-                                No applications yet. Start applying to internships!
-                            </td>
-                        </tr>
-                    </tbody>
-                </table>
+                <!-- Scrollable table wrapper for mobile -->
+                <div class="table-wrapper">
+                    <table class="applications-table">
+                        <thead>
+                            <tr>
+                                <th>Position</th>
+                                <th>Company</th>
+                                <th>Date Applied</th>
+                                <th>Status</th>
+                            </tr>
+                        </thead>
+                        <tbody id="applications-tbody">
+                            <tr>
+                                <td colspan="4" style="text-align: center; padding: 2rem; color: #999;">
+                                    No applications yet. Start applying to internships!
+                                </td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </div>
             </section>
 
-            
             <section id="profile-section" class="hidden">
                 <h2>My Profile</h2>
-                
                 
                 <div class="profile-info" id="profile-display">
                     <p style="text-align: center; color: #999; padding: 2rem;">
@@ -342,12 +327,10 @@
                     </p>
                 </div>
                 
-              
                 <button onclick="showSection('register')" style="margin-top: 1rem;">Edit Profile</button>
             </section>
         </main>
 
-       
         <footer>
             <p>&copy; 2025 InternLink | Developed by Natasha Oyugi</p>
         </footer>

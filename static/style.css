@@ -11,26 +11,26 @@ body {
     background: linear-gradient(135deg, #8B6F47 0%, #6B4423 100%);
     min-height: 100vh;
 }
+
+/* AUTH SECTION */
 .auth-container {
     display: flex;
     justify-content: center;
     align-items: center;
     min-height: 100vh;
-    padding: 2rem;
+    padding: 1rem;
 }
-
 
 .auth-box {
     background: #FFF8F0;
     border-radius: 20px;
     box-shadow: 0 20px 60px rgba(44, 24, 16, 0.4);
-    padding: 3rem;
+    padding: 2rem;
     max-width: 500px;
     width: 100%;
     animation: slideUp 0.5s ease-out;
     border: 3px solid #A67C52;
 }
-
 
 @keyframes slideUp {
     from {
@@ -43,7 +43,6 @@ body {
     }
 }
 
-
 .auth-header {
     text-align: center;
     margin-bottom: 2rem;
@@ -51,37 +50,35 @@ body {
 
 .auth-header h1 {
     color: #6B4423;
-    font-size: 2.5rem;
+    font-size: 2rem;
     margin-bottom: 0.5rem;
     text-shadow: 2px 2px 4px rgba(107, 68, 35, 0.2);
 }
 
 .auth-header p {
     color: #8B6F47;
-    font-size: 1rem;
+    font-size: 0.9rem;
 }
-
 
 #login-form h2,
 #signup-form h2,
 #forgot-password-form h2 {
     color: #6B4423;
     margin-bottom: 0.5rem;
-    font-size: 1.8rem;
+    font-size: 1.5rem;
 }
-
 
 .auth-subtitle {
     color: #8B6F47;
-    margin-bottom: 2rem;
-    font-size: 0.95rem;
+    margin-bottom: 1.5rem;
+    font-size: 0.9rem;
 }
-
 
 .auth-toggle {
     text-align: center;
     margin-top: 1.5rem;
     color: #6B4423;
+    font-size: 0.9rem;
 }
 
 .auth-toggle a {
@@ -104,6 +101,7 @@ body {
     font-size: 0.9rem;
     border: 1px solid #f5c6cb;
 }
+
 .success-message {
     background: #d4edda;
     color: #155724;
@@ -130,7 +128,7 @@ body {
     color: #6B4423;
 }
 
-
+/* NAVIGATION */
 nav {
     background: linear-gradient(135deg, #8B6F47 0%, #6B4423 100%);
     padding: 1rem 2rem;
@@ -138,9 +136,8 @@ nav {
     justify-content: space-between;
     align-items: center;
     box-shadow: 0 2px 10px rgba(44, 24, 16, 0.3);
-    flex-wrap: wrap;
+    position: relative;
 }
-
 
 .nav-user {
     color: #FFF8F0;
@@ -151,6 +148,12 @@ nav {
     margin-right: 1rem;
 }
 
+.nav-links {
+    display: flex;
+    flex-wrap: wrap;
+    align-items: center;
+    gap: 0.5rem;
+}
 
 nav a {
     color: #FFF8F0;
@@ -158,44 +161,73 @@ nav a {
     padding: 0.5rem 1rem;
     border-radius: 5px;
     transition: background 0.3s;
-    margin: 0.25rem;
+    white-space: nowrap;
 }
 
 nav a:hover {
     background: rgba(255, 248, 240, 0.2);
 }
 
+/* Hamburger Menu */
+.hamburger {
+    display: none;
+    flex-direction: column;
+    cursor: pointer;
+    padding: 0.5rem;
+    z-index: 1000;
+}
 
+.hamburger span {
+    width: 25px;
+    height: 3px;
+    background: #FFF8F0;
+    margin: 3px 0;
+    transition: 0.3s;
+    border-radius: 2px;
+}
+
+.hamburger.active span:nth-child(1) {
+    transform: rotate(-45deg) translate(-5px, 6px);
+}
+
+.hamburger.active span:nth-child(2) {
+    opacity: 0;
+}
+
+.hamburger.active span:nth-child(3) {
+    transform: rotate(45deg) translate(-5px, -6px);
+}
+
+/* HEADER */
 header {
     background: #FFF8F0;
     text-align: center;
-    padding: 2rem;
+    padding: 1.5rem 1rem;
     box-shadow: 0 2px 5px rgba(44, 24, 16, 0.2);
 }
 
 header h1 {
     color: #6B4423;
-    font-size: 2.5rem;
+    font-size: 2rem;
     margin-bottom: 0.5rem;
     text-shadow: 2px 2px 4px rgba(107, 68, 35, 0.1);
 }
 
 header p {
     color: #8B6F47;
-    font-size: 1.1rem;
+    font-size: 1rem;
 }
 
-
+/* MAIN CONTENT */
 main {
     max-width: 1200px;
     margin: 2rem auto;
-    padding: 0 2rem;
+    padding: 0 1rem;
 }
-
 
 section {
     background: #FFF8F0;
-    padding: 2rem;
+    padding: 1.5rem;
     border-radius: 10px;
     box-shadow: 0 2px 10px rgba(44, 24, 16, 0.2);
     margin-bottom: 2rem;
@@ -205,34 +237,32 @@ section {
 section h2 {
     color: #6B4423;
     margin-bottom: 1.5rem;
-    font-size: 2rem;
+    font-size: 1.75rem;
     border-bottom: 3px solid #A67C52;
     padding-bottom: 0.5rem;
 }
 
-
 .welcome-message {
     background: linear-gradient(135deg, #8B6F47 0%, #6B4423 100%);
     color: #FFF8F0;
-    padding: 2rem;
+    padding: 1.5rem;
     border-radius: 10px;
     text-align: center;
     margin-bottom: 2rem;
 }
 
 .welcome-message h3 {
-    font-size: 1.8rem;
+    font-size: 1.5rem;
     margin-bottom: 0.5rem;
 }
 
-
+/* FORMS */
 .form-row {
     display: grid;
     grid-template-columns: 1fr 1fr;
     gap: 1rem;
     margin-bottom: 1rem;
 }
-
 
 .form-group {
     margin-bottom: 1rem;
@@ -243,8 +273,8 @@ section h2 {
     margin-bottom: 0.5rem;
     color: #6B4423;
     font-weight: 600;
+    font-size: 0.95rem;
 }
-
 
 .form-group input,
 .form-group select,
@@ -265,30 +295,29 @@ section h2 {
     border-color: #8B6F47;
 }
 
-
 .form-group input[readonly] {
     background: #F5E6D3;
     cursor: not-allowed;
 }
 
-
+/* BUTTONS */
 button, .btn-primary {
     background: linear-gradient(135deg, #8B6F47 0%, #6B4423 100%);
     color: #FFF8F0;
-    padding: 0.75rem 2rem;
+    padding: 0.75rem 1.5rem;
     border: none;
     border-radius: 8px;
     font-size: 1rem;
     font-weight: 600;
     cursor: pointer;
     transition: transform 0.2s, box-shadow 0.2s;
+    min-height: 44px; /* Touch-friendly minimum */
 }
 
 button:hover, .btn-primary:hover {
     transform: translateY(-2px);
     box-shadow: 0 5px 15px rgba(107, 68, 35, 0.4);
 }
-
 
 .btn-secondary {
     background: #A67C52;
@@ -298,15 +327,13 @@ button:hover, .btn-primary:hover {
     box-shadow: 0 5px 15px rgba(166, 124, 82, 0.4);
 }
 
-
-
+/* INTERNSHIPS GRID */
 .internships-grid {
     display: grid;
-    grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
-    gap: 2rem;
+    grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
+    gap: 1.5rem;
     margin-top: 2rem;
 }
-
 
 .card {
     background: #FFF8F0;
@@ -325,12 +352,13 @@ button:hover, .btn-primary:hover {
 .card h3 {
     color: #6B4423;
     margin-bottom: 1rem;
-    font-size: 1.4rem;
+    font-size: 1.3rem;
 }
 
 .card p {
     margin-bottom: 0.5rem;
     color: #4A2E1A;
+    font-size: 0.95rem;
 }
 
 .card .company {
@@ -347,11 +375,17 @@ button:hover, .btn-primary:hover {
     margin-top: 1rem;
 }
 
+/* TABLES */
+.table-wrapper {
+    overflow-x: auto;
+    -webkit-overflow-scrolling: touch;
+}
 
 .applications-table {
     width: 100%;
     border-collapse: collapse;
     margin-top: 1rem;
+    min-width: 600px; /* Prevents table from getting too cramped */
 }
 
 .applications-table th,
@@ -371,7 +405,7 @@ button:hover, .btn-primary:hover {
     background: #F5E6D3;
 }
 
-
+/* STATUS BADGES */
 .status-pending {
     background: #D4A574;
     color: #2c1810;
@@ -399,10 +433,10 @@ button:hover, .btn-primary:hover {
     font-weight: 600;
 }
 
-
+/* PROFILE */
 .profile-info {
     background: #F5E6D3;
-    padding: 2rem;
+    padding: 1.5rem;
     border-radius: 10px;
     border: 2px solid #D4A574;
 }
@@ -410,21 +444,22 @@ button:hover, .btn-primary:hover {
 .profile-info h3 {
     color: #6B4423;
     margin-bottom: 1rem;
-    font-size: 1.5rem;
+    font-size: 1.3rem;
 }
 
 .profile-info p {
     margin-bottom: 0.75rem;
     color: #4A2E1A;
+    word-break: break-word;
 }
 
 .profile-info strong {
     color: #6B4423;
     display: inline-block;
-    min-width: 150px;
+    min-width: 120px;
 }
 
-
+/* FOOTER */
 footer {
     background: #2c1810;
     color: #FFF8F0;
@@ -433,47 +468,163 @@ footer {
     margin-top: 3rem;
 }
 
-
+/* UTILITY */
 .hidden {
     display: none !important;
 }
 
-
-
+/* MOBILE RESPONSIVE - TABLETS AND BELOW */
 @media (max-width: 768px) {
-    
+    /* Forms */
     .form-row {
         grid-template-columns: 1fr;
     }
     
-   
+    /* Navigation - Mobile Menu */
     nav {
         padding: 1rem;
-        justify-content: center;
+        flex-wrap: wrap;
+    }
+    
+    .hamburger {
+        display: flex;
+        order: 3;
     }
     
     .nav-user {
+        order: 1;
+        margin: 0 auto 0 0;
+        font-size: 0.9rem;
+        padding: 0.4rem 0.8rem;
+    }
+    
+    .nav-links {
+        order: 4;
+        width: 100%;
+        flex-direction: column;
+        max-height: 0;
+        overflow: hidden;
+        transition: max-height 0.3s ease-out;
+    }
+    
+    .nav-links.active {
+        max-height: 500px;
+        margin-top: 1rem;
+    }
+    
+    nav a {
         width: 100%;
         text-align: center;
-        margin-bottom: 0.5rem;
+        padding: 0.75rem;
+        margin: 0.25rem 0;
+        background: rgba(255, 248, 240, 0.1);
     }
     
-    
+    /* Header */
     header h1 {
-        font-size: 2rem;
+        font-size: 1.75rem;
     }
     
+    header p {
+        font-size: 0.9rem;
+    }
     
+    /* Main Content */
+    main {
+        padding: 0 0.75rem;
+        margin: 1rem auto;
+    }
+    
+    section {
+        padding: 1.25rem;
+    }
+    
+    section h2 {
+        font-size: 1.5rem;
+    }
+    
+    /* Welcome Message */
+    .welcome-message {
+        padding: 1.25rem;
+    }
+    
+    .welcome-message h3 {
+        font-size: 1.25rem;
+    }
+    
+    /* Internships Grid */
     .internships-grid {
         grid-template-columns: 1fr;
+        gap: 1.25rem;
     }
     
-   
+    /* Auth Box */
     .auth-box {
-        padding: 2rem 1.5rem;
+        padding: 1.5rem;
     }
     
     .auth-header h1 {
-        font-size: 2rem;
+        font-size: 1.75rem;
+    }
+    
+    /* Buttons - Stack on mobile */
+    .welcome-message + p + div button {
+        display: block;
+        width: 100%;
+        margin: 0.5rem 0 !important;
+    }
+    
+    /* Profile Info */
+    .profile-info strong {
+        display: block;
+        margin-bottom: 0.25rem;
+    }
+    
+    /* Table scroll hint */
+    .applications-table {
+        font-size: 0.9rem;
+    }
+    
+    .applications-table th,
+    .applications-table td {
+        padding: 0.75rem 0.5rem;
+    }
+}
+
+/* MOBILE RESPONSIVE - PHONES */
+@media (max-width: 480px) {
+    .auth-box {
+        padding: 1.25rem;
+    }
+    
+    .auth-header h1 {
+        font-size: 1.5rem;
+    }
+    
+    #login-form h2,
+    #signup-form h2,
+    #forgot-password-form h2 {
+        font-size: 1.3rem;
+    }
+    
+    button, .btn-primary {
+        padding: 0.75rem 1rem;
+        font-size: 0.95rem;
+    }
+    
+    .card {
+        padding: 1.25rem;
+    }
+    
+    .card h3 {
+        font-size: 1.2rem;
+    }
+    
+    section h2 {
+        font-size: 1.3rem;
+    }
+    
+    .welcome-message h3 {
+        font-size: 1.15rem;
     }
 }

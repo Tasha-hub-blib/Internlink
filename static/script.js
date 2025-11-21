@@ -1,59 +1,61 @@
 let currentUser = null;
-
-
 let userProfile = null;
-
-
 let userApplications = [];
-
-
 let resetStep = 1; 
 let resetEmail = '';
 let resetCode = '';
-
 
 const API_URL = window.location.hostname === 'localhost' || window.location.hostname === '127.0.0.1'
     ? 'http://localhost:5000'
     : window.location.origin; 
 
-
 document.addEventListener('DOMContentLoaded', function() {
-    
     checkLoginStatus();
+    setupMobileMenu();
 });
 
+// Mobile Menu Toggle Function
+function setupMobileMenu() {
+    const hamburger = document.querySelector('.hamburger');
+    const navLinks = document.querySelector('.nav-links');
+    
+    if (hamburger) {
+        hamburger.addEventListener('click', function() {
+            this.classList.toggle('active');
+            navLinks.classList.toggle('active');
+        });
+        
+        // Close menu when clicking on a link
+        const navItems = document.querySelectorAll('.nav-links a');
+        navItems.forEach(link => {
+            link.addEventListener('click', () => {
+                hamburger.classList.remove('active');
+                navLinks.classList.remove('active');
+            });
+        });
+    }
+}
 
-
-
- 
- 
 function checkLoginStatus() {
     const storedUser = sessionStorage.getItem('currentUser');
     
     if (storedUser) {
-        
         currentUser = JSON.parse(storedUser);
         showMainApp();
         loadUserData();
     } else {
-        
         showLoginForm();
     }
 }
 
-
- 
- 
 function showAuthForm(formType) {
     const loginForm = document.getElementById('login-form');
     const signupForm = document.getElementById('signup-form');
     const forgotForm = document.getElementById('forgot-password-form');
     
-  
     loginForm.classList.add('hidden');
     signupForm.classList.add('hidden');
     if (forgotForm) forgotForm.classList.add('hidden');
-    
     
     if (formType === 'login') {
         loginForm.classList.remove('hidden');
@@ -64,7 +66,6 @@ function showAuthForm(formType) {
         resetPasswordForm(); 
     }
     
-   
     document.getElementById('login-error').classList.add('hidden');
     document.getElementById('signup-error').classList.add('hidden');
     if (document.getElementById('forgot-error')) {
@@ -75,41 +76,30 @@ function showAuthForm(formType) {
     }
 }
 
-
- 
- 
 function showForgotPassword() {
     showAuthForm('forgot');
     return false;
 }
 
-
- 
- 
 function resetPasswordForm() {
     resetStep = 1;
     resetEmail = '';
     resetCode = '';
     
-    
     document.getElementById('reset-code-group').classList.add('hidden');
     document.getElementById('new-password-group').classList.add('hidden');
     document.getElementById('confirm-new-password-group').classList.add('hidden');
-    
     
     document.getElementById('reset-email').value = '';
     document.getElementById('reset-code').value = '';
     document.getElementById('new-password').value = '';
     document.getElementById('confirm-new-password').value = '';
     
-    
     document.getElementById('reset-submit-btn').textContent = 'Send Reset Code';
     
-   
     document.getElementById('forgot-error').classList.add('hidden');
     document.getElementById('forgot-success').classList.add('hidden');
 }
-
 
 async function resetPassword(event) {
     event.preventDefault();
@@ -122,7 +112,6 @@ async function resetPassword(event) {
     
     try {
         if (resetStep === 1) {
-           
             resetEmail = document.getElementById('reset-email').value;
             
             const response = await fetch(`${API_URL}/api/forgot-password`, {
@@ -136,14 +125,11 @@ async function resetPassword(event) {
             const data = await response.json();
             
             if (response.ok) {
-               
                 successDiv.textContent = data.message || 'Reset code sent! Check your email.';
                 successDiv.classList.remove('hidden');
                 
-                
                 resetStep = 2;
                 resetCode = data.reset_code; 
-                
                 
                 document.getElementById('reset-code-group').classList.remove('hidden');
                 document.getElementById('reset-email').readOnly = true;
@@ -155,7 +141,6 @@ async function resetPassword(event) {
             }
             
         } else if (resetStep === 2) {
-            
             const enteredCode = document.getElementById('reset-code').value;
             
             const response = await fetch(`${API_URL}/api/verify-reset-code`, {
@@ -175,9 +160,7 @@ async function resetPassword(event) {
                 successDiv.textContent = 'Code verified! Enter your new password.';
                 successDiv.classList.remove('hidden');
                 
-                
                 resetStep = 3;
-                
                 
                 document.getElementById('new-password-group').classList.remove('hidden');
                 document.getElementById('confirm-new-password-group').classList.remove('hidden');
@@ -190,7 +173,6 @@ async function resetPassword(event) {
             }
             
         } else if (resetStep === 3) {
-            
             const newPassword = document.getElementById('new-password').value;
             const confirmPassword = document.getElementById('confirm-new-password').value;
             
@@ -224,7 +206,6 @@ async function resetPassword(event) {
                 successDiv.textContent = 'Password reset successful! Redirecting to login...';
                 successDiv.classList.remove('hidden');
                 
-                
                 setTimeout(() => {
                     showAuthForm('login');
                 }, 2000);
@@ -242,9 +223,6 @@ async function resetPassword(event) {
     }
 }
 
-
- 
- 
 async function loginUser(event) {
     event.preventDefault();
     
@@ -280,9 +258,6 @@ async function loginUser(event) {
     }
 }
 
-
- 
- 
 async function signupUser(event) {
     event.preventDefault();
     
@@ -338,8 +313,6 @@ async function signupUser(event) {
     }
 }
 
-
- 
 function logout() {
     currentUser = null;
     userProfile = null;
@@ -349,8 +322,6 @@ function logout() {
     document.getElementById('login-form').reset();
     document.getElementById('signup-form').reset();
 }
-
-
 
 function showLoginForm() {
     document.getElementById('login-container').classList.remove('hidden');
@@ -369,6 +340,7 @@ function showMainApp() {
     }
     
     showSection('home');
+    setupMobileMenu();
 }
 
 function showSection(sectionName) {
@@ -388,8 +360,6 @@ function showSection(sectionName) {
         displayApplications();
     }
 }
-
-
 
 async function loadUserData() {
     if (!currentUser) return;
@@ -510,7 +480,6 @@ async function applyInternship(position, company) {
         alert('Unable to connect to server. Please try again later.');
     }
 }
-
 
 function displayProfile() {
     const profileDisplay = document.getElementById('profile-display');
