@@ -1,19 +1,19 @@
 from flask import Flask, request, jsonify, render_template
 from flask_cors import CORS
 from werkzeug.security import generate_password_hash, check_password_hash
-import sqlite3
+import psycopg2
+from psycopg2.extras import RealDictCursor
 from datetime import datetime
 import random
 import string
 import os
 
-
-DATABASE = 'internlink.db'
+# Get database URL from environment variable
+DATABASE_URL = os.environ.get('DATABASE_URL', 'postgresql://internlink_db_user:Epzp1iG3SDB8ukNaE6OLrwMuGuA7GjZN@dpg-d4tcoibe5dus739esivg-a/internlink_db')
 
 def get_db_connection():
     try:
-        conn = sqlite3.connect(DATABASE)
-        conn.row_factory = sqlite3.Row 
+        conn = psycopg2.connect(DATABASE_URL)
         return conn
     except Exception as e:
         print(f"Error connecting to database: {e}")
@@ -25,10 +25,10 @@ def init_db():
     if conn:
         cursor = conn.cursor()
         
-        
+        # Create users table
         cursor.execute("""
             CREATE TABLE IF NOT EXISTS users (
-                id INTEGER PRIMARY KEY AUTOINCREMENT,
+                id SERIAL PRIMARY KEY,
                 first_name TEXT NOT NULL,
                 last_name TEXT NOT NULL,
                 email TEXT UNIQUE NOT NULL,
@@ -38,10 +38,10 @@ def init_db():
             )
         """)
         
-        
+        # Create profiles table
         cursor.execute("""
             CREATE TABLE IF NOT EXISTS profiles (
-                id INTEGER PRIMARY KEY AUTOINCREMENT,
+                id SERIAL PRIMARY KEY,
                 user_id INTEGER UNIQUE NOT NULL,
                 phone TEXT,
                 university TEXT,
@@ -56,10 +56,10 @@ def init_db():
             )
         """)
         
-       
+        # Create applications table
         cursor.execute("""
             CREATE TABLE IF NOT EXISTS applications (
-                id INTEGER PRIMARY KEY AUTOINCREMENT,
+                id SERIAL PRIMARY KEY,
                 user_id INTEGER NOT NULL,
                 position TEXT NOT NULL,
                 company TEXT NOT NULL,
@@ -69,10 +69,10 @@ def init_db():
             )
         """)
         
-        
+        # Create reset_codes table
         cursor.execute("""
             CREATE TABLE IF NOT EXISTS reset_codes (
-                id INTEGER PRIMARY KEY AUTOINCREMENT,
+                id SERIAL PRIMARY KEY,
                 email TEXT NOT NULL,
                 code TEXT NOT NULL,
                 created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
@@ -119,25 +119,26 @@ def signup():
         if not conn:
             return jsonify({'message': 'Database connection failed'}), 500
         
-        cursor = conn.cursor()
+        cursor = conn.cursor(cursor_factory=RealDictCursor)
         
-        
-        cursor.execute("SELECT id FROM users WHERE email = ?", (email,))
+        # Check if email exists
+        cursor.execute("SELECT id FROM users WHERE email = %s", (email,))
         if cursor.fetchone():
             conn.close()
             return jsonify({'message': 'Email already registered'}), 400
         
-        
+        # Hash password
         hashed_password = generate_password_hash(password)
         
-        
+        # Insert user - PostgreSQL uses RETURNING to get the ID
         cursor.execute("""
             INSERT INTO users (first_name, last_name, email, password, user_type)
-            VALUES (?, ?, ?, ?, ?)
+            VALUES (%s, %s, %s, %s, %s)
+            RETURNING id
         """, (first_name, last_name, email, hashed_password, user_type))
         
+        user_id = cursor.fetchone()['id']
         conn.commit()
-        user_id = cursor.lastrowid
         
         user_data = {
             'id': user_id,
@@ -168,8 +169,8 @@ def login():
         if not conn:
             return jsonify({'message': 'Database connection failed'}), 500
         
-        cursor = conn.cursor()
-        cursor.execute("SELECT * FROM users WHERE email = ?", (email,))
+        cursor = conn.cursor(cursor_factory=RealDictCursor)
+        cursor.execute("SELECT * FROM users WHERE email = %s", (email,))
         user = cursor.fetchone()
         
         if not user or not check_password_hash(user['password'], password):
@@ -208,32 +209,28 @@ def forgot_password():
         if not conn:
             return jsonify({'message': 'Database connection failed'}), 500
         
-        cursor = conn.cursor()
-        cursor.execute("SELECT id FROM users WHERE email = ?", (email,))
+        cursor = conn.cursor(cursor_factory=RealDictCursor)
+        cursor.execute("SELECT id FROM users WHERE email = %s", (email,))
         user = cursor.fetchone()
         
         if user:
-            
             reset_code = generate_reset_code()
-            
             
             cursor.execute("""
                 INSERT INTO reset_codes (email, code)
-                VALUES (?, ?)
+                VALUES (%s, %s)
             """, (email, reset_code))
             conn.commit()
             
-           
             print(f"Reset code for {email}: {reset_code}")
             
             conn.close()
             return jsonify({
                 'message': f'Reset code sent! For demo purposes, your code is: {reset_code}',
-                'reset_code': reset_code  
+                'reset_code': reset_code
             }), 200
         else:
             conn.close()
-            
             return jsonify({
                 'message': 'If an account exists with this email, you will receive a reset code.'
             }), 200
@@ -256,12 +253,11 @@ def verify_reset_code():
         if not conn:
             return jsonify({'message': 'Database connection failed'}), 500
         
-        cursor = conn.cursor()
-        
+        cursor = conn.cursor(cursor_factory=RealDictCursor)
         
         cursor.execute("""
             SELECT id FROM reset_codes 
-            WHERE email = ? AND code = ? AND used = 0
+            WHERE email = %s AND code = %s AND used = 0
             ORDER BY created_at DESC
             LIMIT 1
         """, (email, code))
@@ -296,12 +292,11 @@ def reset_password():
         if not conn:
             return jsonify({'message': 'Database connection failed'}), 500
         
-        cursor = conn.cursor()
+        cursor = conn.cursor(cursor_factory=RealDictCursor)
         
-       
         cursor.execute("""
             SELECT id FROM reset_codes 
-            WHERE email = ? AND code = ? AND used = 0
+            WHERE email = %s AND code = %s AND used = 0
             ORDER BY created_at DESC
             LIMIT 1
         """, (email, code))
@@ -312,19 +307,17 @@ def reset_password():
             conn.close()
             return jsonify({'message': 'Invalid or expired code'}), 400
         
-        
         cursor.execute("""
             UPDATE reset_codes 
             SET used = 1 
-            WHERE id = ?
+            WHERE id = %s
         """, (reset_record['id'],))
-        
         
         hashed_password = generate_password_hash(new_password)
         cursor.execute("""
             UPDATE users 
-            SET password = ? 
-            WHERE email = ?
+            SET password = %s 
+            WHERE email = %s
         """, (hashed_password, email))
         
         conn.commit()
@@ -345,8 +338,8 @@ def get_profile(user_id):
         if not conn:
             return jsonify({'message': 'Database connection failed'}), 500
         
-        cursor = conn.cursor()
-        cursor.execute("SELECT * FROM profiles WHERE user_id = ?", (user_id,))
+        cursor = conn.cursor(cursor_factory=RealDictCursor)
+        cursor.execute("SELECT * FROM profiles WHERE user_id = %s", (user_id,))
         profile = cursor.fetchone()
         
         conn.close()
@@ -373,19 +366,17 @@ def save_profile():
         if not conn:
             return jsonify({'message': 'Database connection failed'}), 500
         
-        cursor = conn.cursor()
+        cursor = conn.cursor(cursor_factory=RealDictCursor)
         
-        
-        cursor.execute("SELECT id FROM profiles WHERE user_id = ?", (user_id,))
+        cursor.execute("SELECT id FROM profiles WHERE user_id = %s", (user_id,))
         existing = cursor.fetchone()
         
         if existing:
-            
             cursor.execute("""
                 UPDATE profiles 
-                SET phone = ?, university = ?, course = ?, year = ?, 
-                    gpa = ?, skills = ?, interests = ?, updated_at = ?
-                WHERE user_id = ?
+                SET phone = %s, university = %s, course = %s, year = %s, 
+                    gpa = %s, skills = %s, interests = %s, updated_at = %s
+                WHERE user_id = %s
             """, (
                 data.get('phone'),
                 data.get('university'),
@@ -398,11 +389,10 @@ def save_profile():
                 user_id
             ))
         else:
-            
             cursor.execute("""
                 INSERT INTO profiles 
                 (user_id, phone, university, course, year, gpa, skills, interests)
-                VALUES (?, ?, ?, ?, ?, ?, ?, ?)
+                VALUES (%s, %s, %s, %s, %s, %s, %s, %s)
             """, (
                 user_id,
                 data.get('phone'),
@@ -416,8 +406,7 @@ def save_profile():
         
         conn.commit()
         
-        
-        cursor.execute("SELECT * FROM profiles WHERE user_id = ?", (user_id,))
+        cursor.execute("SELECT * FROM profiles WHERE user_id = %s", (user_id,))
         profile = cursor.fetchone()
         
         conn.close()
@@ -436,10 +425,10 @@ def get_applications(user_id):
         if not conn:
             return jsonify({'message': 'Database connection failed'}), 500
         
-        cursor = conn.cursor()
+        cursor = conn.cursor(cursor_factory=RealDictCursor)
         cursor.execute("""
             SELECT * FROM applications 
-            WHERE user_id = ? 
+            WHERE user_id = %s 
             ORDER BY date_applied DESC
         """, (user_id,))
         
@@ -467,28 +456,27 @@ def apply_internship():
         if not conn:
             return jsonify({'message': 'Database connection failed'}), 500
         
-        cursor = conn.cursor()
+        cursor = conn.cursor(cursor_factory=RealDictCursor)
         
-       
         cursor.execute("""
             SELECT id FROM applications 
-            WHERE user_id = ? AND position = ? AND company = ?
+            WHERE user_id = %s AND position = %s AND company = %s
         """, (user_id, position, company))
         
         if cursor.fetchone():
             conn.close()
             return jsonify({'message': 'Already applied to this internship'}), 400
         
-        
         cursor.execute("""
             INSERT INTO applications (user_id, position, company, status)
-            VALUES (?, ?, ?, ?)
+            VALUES (%s, %s, %s, %s)
+            RETURNING id
         """, (user_id, position, company, 'Pending'))
         
+        application_id = cursor.fetchone()['id']
         conn.commit()
-        application_id = cursor.lastrowid
         
-        cursor.execute("SELECT * FROM applications WHERE id = ?", (application_id,))
+        cursor.execute("SELECT * FROM applications WHERE id = %s", (application_id,))
         application = cursor.fetchone()
         
         conn.close()
@@ -510,7 +498,7 @@ def get_all_users():
         if not conn:
             return jsonify({'message': 'Database connection failed'}), 500
         
-        cursor = conn.cursor()
+        cursor = conn.cursor(cursor_factory=RealDictCursor)
         cursor.execute("SELECT id, first_name, last_name, email, user_type, created_at FROM users ORDER BY created_at DESC")
         users = [dict(row) for row in cursor.fetchall()]
         conn.close()
@@ -527,7 +515,7 @@ def get_all_profiles():
         if not conn:
             return jsonify({'message': 'Database connection failed'}), 500
         
-        cursor = conn.cursor()
+        cursor = conn.cursor(cursor_factory=RealDictCursor)
         cursor.execute("SELECT * FROM profiles ORDER BY created_at DESC")
         profiles = [dict(row) for row in cursor.fetchall()]
         conn.close()
@@ -544,7 +532,7 @@ def get_all_applications():
         if not conn:
             return jsonify({'message': 'Database connection failed'}), 500
         
-        cursor = conn.cursor()
+        cursor = conn.cursor(cursor_factory=RealDictCursor)
         cursor.execute("SELECT * FROM applications ORDER BY date_applied DESC")
         applications = [dict(row) for row in cursor.fetchall()]
         conn.close()
@@ -556,7 +544,6 @@ def get_all_applications():
 
 
 if __name__ == '__main__':
-    
     print("\n" + "="*60)
     print("🎓 INTERNLINK STUDENT PORTAL - PHASE 1")
     print("="*60)
